@@ -38,11 +38,10 @@ signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
 
 public slots:
-    void set_filter(QSqlTableModel* model, QString filter);
-    void set_properties(CustomTypes::PartType part_type, const QString value);
-    void set_model(QSqlTableModel *model, CustomTypes::PartType part_type);
-    QString create_filter(CustomTypes::PartType part_type);
     void init();
+    void set_model(QSqlTableModel *model, CustomTypes::PartType part_type);
+    void set_properties(CustomTypes::PartType part_type, const QString value);
+    QString create_filter(CustomTypes::PartType part_type);
 
     void setAttribute_wheel_size(PartAttribute attribute_wheel_size);
 };

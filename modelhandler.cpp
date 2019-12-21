@@ -20,30 +20,19 @@ void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
     switch(attribute.first){
     case CustomTypes::AttributeWheelSize:
     {
-        set_filter(m_model_fork, create_filter(CustomTypes::PartFork));
-        set_filter(m_model_frame, create_filter(CustomTypes::PartFrame));
+        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
+        m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
         break;
     }
     }
 }
 
-
-void ModelHandler::set_filter(QSqlTableModel *model, QString filter)
+void ModelHandler::init()
 {
-    model->setFilter(filter);
+    m_map_part_table.insert(CustomTypes::PartFrame, "frame");
+    m_map_part_table.insert(CustomTypes::PartFork, "fork");
 
-}
-
-void ModelHandler::set_properties(CustomTypes::PartType part_type, const QString value)
-{
-    switch(part_type){
-    case CustomTypes::PartFork:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
-        break;
-    case CustomTypes::PartFrame:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
-        break;
-    }
+    emit map_part_table_ready(m_map_part_table);
 }
 
 void ModelHandler::set_model(QSqlTableModel* model, CustomTypes::PartType part_type)
@@ -58,6 +47,18 @@ void ModelHandler::set_model(QSqlTableModel* model, CustomTypes::PartType part_t
     }
 }
 
+void ModelHandler::set_properties(CustomTypes::PartType part_type, const QString value)
+{
+    switch(part_type){
+    case CustomTypes::PartFork:
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
+        break;
+    case CustomTypes::PartFrame:
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
+        break;
+    }
+}
+
 QString ModelHandler::create_filter(CustomTypes::PartType part_type)
 {
     QStringList filter_properties_list;
@@ -67,7 +68,6 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_wheel_size().second != "-1"){
             filter_properties_list << QString("wheel_size = %1").arg(attribute_wheel_size().second);
         }
-
         break;
     }
     case CustomTypes::PartFrame:
@@ -82,13 +82,6 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
     return filter_properties_list.join(" AND ");
 }
 
-void ModelHandler::init()
-{
-    m_map_part_table.insert(CustomTypes::PartFrame, "frame");
-    m_map_part_table.insert(CustomTypes::PartFork, "fork");
-
-    emit map_part_table_ready(m_map_part_table);
-}
 
 void ModelHandler::setAttribute_wheel_size(PartAttribute attribute_wheel_size)
 {
