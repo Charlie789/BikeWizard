@@ -4,6 +4,8 @@
 #include "mainwindow.h"
 #include <QApplication>
 #include <QObject>
+#include "dbconnector.h"
+#include "modelhandler.h"
 
 class BikeWizardApplication : public QApplication
 {
@@ -13,6 +15,8 @@ public:
 
 private:
     MainWindow w;
+    DbConnector db;
+    ModelHandler m_model_handler;
 
 };
 

@@ -7,12 +7,17 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
     bikewizardapplication.cpp \
+    dbconnector.cpp \
     main.cpp \
-    mainwindow.cpp
+    mainwindow.cpp \
+    modelhandler.cpp
 
 HEADERS += \
     bikewizardapplication.h \
-    mainwindow.h
+    customtypes.h \
+    dbconnector.h \
+    mainwindow.h \
+    modelhandler.h
 
 FORMS += \
     mainwindow.ui
