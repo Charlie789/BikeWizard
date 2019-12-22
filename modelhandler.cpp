@@ -7,6 +7,7 @@ ModelHandler::ModelHandler(QObject *parent) :
     QObject(parent),
     m_attribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"))
 {
+    connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::attribute_wheel_sizeChanged, this, &ModelHandler::property_handler);
 }
 
@@ -35,7 +36,7 @@ void ModelHandler::init()
     emit map_part_table_ready(m_map_part_table);
 }
 
-void ModelHandler::set_model(QSqlTableModel* model, CustomTypes::PartType part_type)
+void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* model)
 {
     switch (part_type){
     case CustomTypes::PartFrame:
@@ -47,14 +48,14 @@ void ModelHandler::set_model(QSqlTableModel* model, CustomTypes::PartType part_t
     }
 }
 
-void ModelHandler::set_properties(CustomTypes::PartType part_type, const QString value)
+void ModelHandler::set_properties(CustomTypes::PartType part_type, QModelIndexList* list)
 {
     switch(part_type){
     case CustomTypes::PartFork:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2).data().toString()));
         break;
     case CustomTypes::PartFrame:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, value));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2).data().toString()));
         break;
     }
 }
@@ -90,4 +91,15 @@ void ModelHandler::setAttribute_wheel_size(PartAttribute attribute_wheel_size)
 
     m_attribute_wheel_size = attribute_wheel_size;
     emit attribute_wheel_sizeChanged(m_attribute_wheel_size);
+}
+
+void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)
+{
+    for(auto e : map_part.keys()){
+        QList<QStandardItem *> rowData;
+        rowData << new QStandardItem(map_part.value(e));
+        rowData << new QStandardItem(QString("%1").arg(e));
+        m_model_selected_parts.appendRow(rowData);
+        emit selected_parts_model_ready(&m_model_selected_parts);
+    }
 }

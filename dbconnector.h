@@ -22,7 +22,7 @@ private:
 
 signals:
     void db_ready(QSqlDatabase* db);
-    void model_ready(QSqlTableModel* model, CustomTypes::PartType part_type);
+    void model_ready(CustomTypes::PartType part_type, QSqlTableModel* model);
 
 };
 

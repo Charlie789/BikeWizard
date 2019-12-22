@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QSqlTableModel>
 #include "customtypes.h"
+#include <QStandardItemModel>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -18,18 +19,20 @@ public:
     ~MainWindow();
 
 private:
-    Ui::MainWindow *ui;
+    Ui::MainWindow* ui;
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
+    QStandardItemModel* m_selected_parts_model;
 
 public slots:
-    void set_model(QSqlTableModel* model, CustomTypes::PartType part_type);
+    void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
+    void set_selected_parts_model(QStandardItemModel* model);
 
 private slots:
-    void on_frame_tableview_clicked(const QModelIndex &index);
-    void on_fork_tableview_clicked(const QModelIndex &index);
+    void select_button_clicked();
+    void on_accept_pushbutton_clicked();
 
 signals:
-    void part_changed(CustomTypes::PartType part_type, const QString value);
+    void part_changed(CustomTypes::PartType part_type, QModelIndexList* list);
 };
 #endif // MAINWINDOW_H

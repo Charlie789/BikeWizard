@@ -29,6 +29,6 @@ void DbConnector::create_models()
         model->setTable(m_map_part_table.value(e));
         model->setEditStrategy(QSqlTableModel::OnManualSubmit);
         model->select();
-        emit model_ready(model, e);
+        emit model_ready(e, model);
     }
 }
