@@ -44,6 +44,7 @@ public slots:
     void init();
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
     void set_properties(CustomTypes::PartType part_type, QModelIndexList* list);
+    void set_selected_part(CustomTypes::PartType part_type, QModelIndexList* list);
     QString create_filter(CustomTypes::PartType part_type);
 
     void setAttribute_wheel_size(PartAttribute attribute_wheel_size);

@@ -5,6 +5,7 @@ BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
 {
     w.show();
 
+    connect(&w, &MainWindow::part_changed, &m_model_handler, &ModelHandler::set_selected_part);
     connect(&w, &MainWindow::part_changed, &m_model_handler, &ModelHandler::set_properties);
     connect(&db, &DbConnector::db_ready, &m_model_handler, &ModelHandler::init);
     connect(&db, &DbConnector::model_ready, &m_model_handler, &ModelHandler::set_model);

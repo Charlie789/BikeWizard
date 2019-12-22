@@ -29,7 +29,7 @@ public slots:
     void set_selected_parts_model(QStandardItemModel* model);
 
 private slots:
-    void select_button_clicked();
+    void select_part_button_clicked();
     void on_accept_pushbutton_clicked();
 
 signals:

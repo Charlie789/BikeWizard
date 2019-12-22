@@ -27,10 +27,10 @@
      <widget class="QTableView" name="selected_parts_tableview">
       <property name="geometry">
        <rect>
-        <x>50</x>
-        <y>30</y>
-        <width>651</width>
-        <height>251</height>
+        <x>0</x>
+        <y>40</y>
+        <width>751</width>
+        <height>461</height>
        </rect>
       </property>
       <property name="selectionMode">

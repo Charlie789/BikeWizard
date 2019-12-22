@@ -4,14 +4,25 @@
 #include <QMap>
 
 namespace CustomTypes {
-enum PartType{
-    PartFrame,
-    PartFork
-};
+    enum PartType{
+        PartFrame,
+        PartFork
+    };
 
-enum AttributeName{
-    AttributeWheelSize
-};
+    enum AttributeName{
+        AttributeWheelSize
+    };
+
+}
+
+namespace TableProperties {
+    namespace SelectedParts {
+        enum Columns{
+            ColumnPartName = 1,
+            ColumnPartType,
+            ColumnPartID
+        };
+    }
 }
 
 #endif // CUSTOMTYPES_H
