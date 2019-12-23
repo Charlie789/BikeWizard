@@ -23,6 +23,7 @@ private:
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
     QSqlTableModel* m_model_front_wheel;
+    QSqlTableModel* m_model_rear_wheel;
 
     QStandardItemModel* m_selected_parts_model;
 

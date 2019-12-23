@@ -6,12 +6,14 @@
 ModelHandler::ModelHandler(QObject *parent) :
     QObject(parent),
     m_attribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1")),
-    m_attribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"))
+    m_attribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1")),
+    m_attribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"))
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
     connect(this, &ModelHandler::attribute_wheel_sizeChanged, this, &ModelHandler::property_handler);
     connect(this, &ModelHandler::attribute_axle_type_frontChanged, this, &ModelHandler::property_handler);
+    connect(this, &ModelHandler::attribute_axle_type_rearChanged, this, &ModelHandler::property_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -22,6 +24,11 @@ ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
 ModelHandler::PartAttribute ModelHandler::attribute_axle_type_front() const
 {
     return m_attribute_axle_type_front;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_axle_type_rear() const
+{
+    return m_attribute_axle_type_rear;
 }
 
 void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
@@ -36,6 +43,9 @@ void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
         m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
         m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
         break;
+    case CustomTypes::AttributeAxleTypeRear:
+        m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
+        m_model_rear_wheel->setFilter(create_filter(CustomTypes::PartRearWheel));
     }
 }
 
@@ -44,9 +54,11 @@ void ModelHandler::init()
     m_map_part_table.insert(CustomTypes::PartFrame, "frame");
     m_map_part_table.insert(CustomTypes::PartFork, "fork");
     m_map_part_table.insert(CustomTypes::PartFrontWheel, "front_wheel");
+    m_map_part_table.insert(CustomTypes::PartRearWheel, "rear_wheel");
 
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -63,6 +75,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
     case CustomTypes::PartFrontWheel:
         m_model_front_wheel = model;
         break;
+    case CustomTypes::PartRearWheel:
+        m_model_rear_wheel = model;
+        break;
     }
 }
 
@@ -78,13 +93,20 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
     case CustomTypes::PartFrame:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, list->at(3)));
+        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
         break;
     case CustomTypes::PartFrontWheel:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
         setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, list->at(3)));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]++;
+        break;
+    case CustomTypes::PartRearWheel:
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
+        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, list->at(3)));
+        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
         break;
     }
 }
@@ -93,6 +115,7 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
 {
     switch(part_type){
     case CustomTypes::PartFork:
+    {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
             setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
@@ -100,21 +123,36 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront] <= 0)
             setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
         break;
+    }
     case CustomTypes::PartFrame:
+    {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
             setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
-        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear] <= 0)
+            setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
         break;
+    }
     case CustomTypes::PartFrontWheel:
+    {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
             setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]--;
-        qDebug() << m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront];
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront] <= 0)
             setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
         break;
+    }
+    case CustomTypes::PartRearWheel:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
+            setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear] <= 0)
+            setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
+    }
     }
 }
 
@@ -164,6 +202,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_wheel_size().second != "-1"){
             filter_properties_list << QString("wheel_size = '%1'").arg(attribute_wheel_size().second);
         }
+        if (attribute_axle_type_rear().second != "-1"){
+            filter_properties_list << QString("axle_type_rear = '%1'").arg(attribute_axle_type_rear().second);
+        }
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -176,6 +217,13 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         break;
     }
+    case CustomTypes::PartRearWheel:
+        if (attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(attribute_wheel_size().second);
+        }
+        if (attribute_axle_type_rear().second != "-1"){
+            filter_properties_list << QString("axle_type_rear = '%1'").arg(attribute_axle_type_rear().second);
+        }
     }
     qDebug() << filter_properties_list.join(" AND ");
     return filter_properties_list.join(" AND ");
@@ -198,6 +246,15 @@ void ModelHandler::setAttribute_axle_type_front(PartAttribute attribute_axle_typ
 
     m_attribute_axle_type_front = attribute_axle_type_front;
     emit attribute_axle_type_frontChanged(m_attribute_axle_type_front);
+}
+
+void ModelHandler::setAttribute_axle_type_rear(ModelHandler::PartAttribute attribute_axle_type_rear)
+{
+    if (m_attribute_axle_type_rear == attribute_axle_type_rear)
+        return;
+
+    m_attribute_axle_type_rear = attribute_axle_type_rear;
+    emit attribute_axle_type_rearChanged(m_attribute_axle_type_rear);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)

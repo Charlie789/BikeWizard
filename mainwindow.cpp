@@ -45,6 +45,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartFrontWheel:
         m_model_front_wheel = model;
         break;
+    case CustomTypes::PartRearWheel:
+        m_model_rear_wheel = model;
+        break;
     }
 }
 
@@ -74,6 +77,8 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartFrontWheel:
         ui->part_tableview->setModel(m_model_front_wheel);
         break;
+    case CustomTypes::PartRearWheel:
+        ui->part_tableview->setModel(m_model_rear_wheel);
     }
     ui->part_tableview->setProperty("part_type", part_type);
     ui->stackedWidget->setCurrentIndex(1);

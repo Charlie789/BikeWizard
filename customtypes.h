@@ -7,12 +7,14 @@ namespace CustomTypes {
     enum PartType{
         PartFrame,
         PartFork,
-        PartFrontWheel
+        PartFrontWheel,
+        PartRearWheel
     };
 
     enum AttributeName{
         AttributeWheelSize,
-        AttributeAxleTypeFront
+        AttributeAxleTypeFront,
+        AttributeAxleTypeRear
     };
 
 }

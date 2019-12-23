@@ -17,12 +17,14 @@ class ModelHandler : public QObject
 
     Q_PROPERTY(PartAttribute attribute_wheel_size READ attribute_wheel_size WRITE setAttribute_wheel_size NOTIFY attribute_wheel_sizeChanged);
     Q_PROPERTY(PartAttribute attribute_axle_type_front READ attribute_axle_type_front WRITE setAttribute_axle_type_front NOTIFY attribute_axle_type_frontChanged);
+    Q_PROPERTY(PartAttribute attribute_axle_type_rear READ attribute_axle_type_rear WRITE setAttribute_axle_type_rear NOTIFY attribute_axle_type_rearChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
 
     PartAttribute attribute_wheel_size() const;
     PartAttribute attribute_axle_type_front() const;
+    PartAttribute attribute_axle_type_rear() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -32,6 +34,7 @@ private:
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
     QSqlTableModel* m_model_front_wheel;
+    QSqlTableModel* m_model_rear_wheel;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -39,6 +42,7 @@ private:
 
     PartAttribute m_attribute_wheel_size;
     PartAttribute m_attribute_axle_type_front;
+    PartAttribute m_attribute_axle_type_rear;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -47,6 +51,7 @@ signals:
 
     void attribute_wheel_sizeChanged(PartAttribute attribute_wheel_size);
     void attribute_axle_type_frontChanged(PartAttribute attribute_axle_type_front);
+    void attribute_axle_type_rearChanged(PartAttribute attribute_axle_type_rear);
 
 public slots:
     void init();
@@ -59,6 +64,7 @@ public slots:
 
     void setAttribute_wheel_size(PartAttribute attribute_wheel_size);
     void setAttribute_axle_type_front(PartAttribute attribute_axle_type_front);
+    void setAttribute_axle_type_rear(PartAttribute attribute_axle_type_rear);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
