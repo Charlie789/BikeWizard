@@ -38,6 +38,7 @@ void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
         m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
         m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
         m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
+        m_model_rear_wheel->setFilter(create_filter(CustomTypes::PartRearWheel));
         break;
     case CustomTypes::AttributeAxleTypeFront:
         m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
@@ -225,7 +226,7 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
             filter_properties_list << QString("axle_type_rear = '%1'").arg(attribute_axle_type_rear().second);
         }
     }
-    qDebug() << filter_properties_list.join(" AND ");
+    qDebug() << part_type << filter_properties_list.join(" AND ");
     return filter_properties_list.join(" AND ");
 }
 
