@@ -9,6 +9,7 @@ ModelHandler::ModelHandler(QObject *parent) :
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::attribute_wheel_sizeChanged, this, &ModelHandler::property_handler);
+    connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -33,6 +34,8 @@ void ModelHandler::init()
     m_map_part_table.insert(CustomTypes::PartFrame, "frame");
     m_map_part_table.insert(CustomTypes::PartFork, "fork");
 
+    m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
+
     emit map_part_table_ready(m_map_part_table);
 }
 
@@ -53,9 +56,31 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QModelIndexLi
     switch(part_type){
     case CustomTypes::PartFork:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2).data().toString()));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
         break;
     case CustomTypes::PartFrame:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2).data().toString()));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        break;
+    }
+}
+
+void ModelHandler::clean_properties(CustomTypes::PartType part_type)
+{
+    switch(part_type){
+    case CustomTypes::PartFork:
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
+            setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        break;
+    case CustomTypes::PartFrame:
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
+            setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
         break;
     }
 }
@@ -71,6 +96,20 @@ void ModelHandler::set_selected_part(CustomTypes::PartType part_type, QModelInde
             m_model_selected_parts.setData(index_part_id, list->at(0).data().toString());
         }
     }
+}
+
+void ModelHandler::delete_selected_part(CustomTypes::PartType part_type)
+{
+    for (int i = 0; i < m_model_selected_parts.rowCount(); ++i){
+        QModelIndex index_part_type = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartType);
+        if (m_model_selected_parts.data(index_part_type).toInt() == part_type){
+            QModelIndex index_part_name = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartName);
+            QModelIndex index_part_id = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartID);
+            m_model_selected_parts.setData(index_part_name, "Nie wybrano części");
+            m_model_selected_parts.setData(index_part_id, "-1");
+        }
+    }
+    emit part_deleted(part_type);
 }
 
 QString ModelHandler::create_filter(CustomTypes::PartType part_type)

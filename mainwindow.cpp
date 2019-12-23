@@ -7,11 +7,29 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow)
 {
     ui->setupUi(this);
+    connect(this, &MainWindow::part_changed, this, &MainWindow::prepare_delete_button);
 }
 
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::add_select_button(int row_index)
+{
+    QPushButton* select_button = new QPushButton("Wybierz");
+    select_button->setProperty("part_type",m_selected_parts_model->data(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType)).toInt());
+    ui->selected_parts_tableview->setIndexWidget(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType), select_button);
+    connect(select_button, &QPushButton::clicked, this, &MainWindow::select_part_button_clicked);
+}
+
+void MainWindow::add_delete_button(int row_index)
+{
+    QPushButton* delete_button = new QPushButton("Usuń");
+    delete_button->setProperty("part_type",m_selected_parts_model->data(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType)).toInt());
+    ui->selected_parts_tableview->setIndexWidget(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType), delete_button);
+    connect(delete_button, &QPushButton::clicked, this, &MainWindow::delete_part_button_clicked);
+    connect(delete_button, &QPushButton::clicked, delete_button, &QPushButton::deleteLater);
 }
 
 void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* model)
@@ -33,12 +51,9 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
     ui->selected_parts_tableview->setModel(m_selected_parts_model);
 
     for (int i = 0; i < m_selected_parts_model->rowCount(); ++i){
-        QPushButton* select_button = new QPushButton("Wybierz");
-        select_button->setProperty("part_type",m_selected_parts_model->data(m_selected_parts_model->index(i, TableProperties::SelectedParts::ColumnPartType)).toInt());
-        ui->selected_parts_tableview->setIndexWidget(model->index(i, TableProperties::SelectedParts::ColumnPartType), select_button);
+        add_select_button(i);
         ui->selected_parts_tableview->setColumnWidth(1, 400);
         ui->selected_parts_tableview->hideColumn(3);
-        connect(select_button, &QPushButton::clicked, this, &MainWindow::select_part_button_clicked);
     }
 }
 
@@ -58,6 +73,19 @@ void MainWindow::select_part_button_clicked()
     ui->stackedWidget->setCurrentIndex(1);
 }
 
+void MainWindow::delete_part_button_clicked()
+{
+    QObject* button = QObject::sender();
+    CustomTypes::PartType part_type = (CustomTypes::PartType)button->property("part_type").toInt();
+    for (int i = 0; i < ui->selected_parts_tableview->model()->rowCount(); ++i){
+        QModelIndex index_part_type = ui->selected_parts_tableview->model()->index(i, TableProperties::SelectedParts::ColumnPartType);
+        if (ui->selected_parts_tableview->model()->data(index_part_type).toInt() == part_type){
+            add_select_button(i);
+        }
+    }
+    emit part_has_to_be_remove(part_type);
+}
+
 void MainWindow::on_accept_pushbutton_clicked()
 {
     CustomTypes::PartType part_type = (CustomTypes::PartType)ui->part_tableview->property("part_type").toInt();
@@ -68,4 +96,14 @@ void MainWindow::on_accept_pushbutton_clicked()
     }
     emit part_changed(part_type, &list);
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::prepare_delete_button(CustomTypes::PartType part_type, QModelIndexList *)
+{
+    for (int i = 0; i < ui->selected_parts_tableview->model()->rowCount(); ++i){
+        QModelIndex index_part_type = ui->selected_parts_tableview->model()->index(i, TableProperties::SelectedParts::ColumnPartType);
+        if (ui->selected_parts_tableview->model()->data(index_part_type).toInt() == part_type){
+            add_delete_button(i);
+        }
+    }
 }

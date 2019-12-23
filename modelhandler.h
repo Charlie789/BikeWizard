@@ -25,6 +25,7 @@ public:
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
     QMap<CustomTypes::PartType, QList<QString>> m_map_part_property_list;
+    QMap<CustomTypes::AttributeName, int> m_map_attribute_counter;
 
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
@@ -39,12 +40,15 @@ signals:
     void attribute_wheel_sizeChanged(PartAttribute attribute_wheel_size);
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
     void selected_parts_model_ready(QStandardItemModel* model);
+    void part_deleted(CustomTypes::PartType part_type);
 
 public slots:
     void init();
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
     void set_properties(CustomTypes::PartType part_type, QModelIndexList* list);
+    void clean_properties(CustomTypes::PartType part_type);
     void set_selected_part(CustomTypes::PartType part_type, QModelIndexList* list);
+    void delete_selected_part(CustomTypes::PartType part_type);
     QString create_filter(CustomTypes::PartType part_type);
 
     void setAttribute_wheel_size(PartAttribute attribute_wheel_size);
