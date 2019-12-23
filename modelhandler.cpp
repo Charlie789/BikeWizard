@@ -24,6 +24,7 @@ void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
     {
         m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
         m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
+        m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
         break;
     }
     }
@@ -33,6 +34,7 @@ void ModelHandler::init()
 {
     m_map_part_table.insert(CustomTypes::PartFrame, "frame");
     m_map_part_table.insert(CustomTypes::PartFork, "fork");
+    m_map_part_table.insert(CustomTypes::PartFrontWheel, "front_wheel");
 
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
 
@@ -47,6 +49,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartFork:
         m_model_fork = model;
+        break;
+    case CustomTypes::PartFrontWheel:
+        m_model_front_wheel = model;
         break;
     }
 }
@@ -64,6 +69,11 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QModelIndexLi
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
         qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
         break;
+    case CustomTypes::PartFrontWheel:
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2).data().toString()));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        break;
     }
 }
 
@@ -77,6 +87,12 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
         break;
     case CustomTypes::PartFrame:
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
+            setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+        qDebug() << m_map_attribute_counter[CustomTypes::AttributeWheelSize];
+        break;
+    case CustomTypes::PartFrontWheel:
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
             setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
@@ -124,6 +140,13 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         break;
     }
     case CustomTypes::PartFrame:
+    {
+        if (attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = %1").arg(attribute_wheel_size().second);
+        }
+        break;
+    }
+    case CustomTypes::PartFrontWheel:
     {
         if (attribute_wheel_size().second != "-1"){
             filter_properties_list << QString("wheel_size = %1").arg(attribute_wheel_size().second);

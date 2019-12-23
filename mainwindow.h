@@ -22,6 +22,8 @@ private:
     Ui::MainWindow* ui;
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
+    QSqlTableModel* m_model_front_wheel;
+
     QStandardItemModel* m_selected_parts_model;
 
     void add_select_button(int row_index);

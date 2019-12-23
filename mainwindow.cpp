@@ -42,6 +42,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
         m_model_fork = model;
         ui->fork_tableview->setModel(m_model_fork);
         break;
+    case CustomTypes::PartFrontWheel:
+        m_model_front_wheel = model;
+        break;
     }
 }
 
@@ -67,6 +70,9 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartFork:
         ui->part_tableview->setModel(m_model_fork);
+        break;
+    case CustomTypes::PartFrontWheel:
+        ui->part_tableview->setModel(m_model_front_wheel);
         break;
     }
     ui->part_tableview->setProperty("part_type", part_type);

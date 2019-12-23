@@ -6,7 +6,8 @@
 namespace CustomTypes {
     enum PartType{
         PartFrame,
-        PartFork
+        PartFork,
+        PartFrontWheel
     };
 
     enum AttributeName{

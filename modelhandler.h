@@ -29,6 +29,8 @@ private:
 
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;
+    QSqlTableModel* m_model_front_wheel;
+
     QStandardItemModel m_model_selected_parts;
 
     PartAttribute m_attribute_wheel_size;
