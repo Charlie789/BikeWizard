@@ -40,6 +40,8 @@ private slots:
     void on_accept_pushbutton_clicked();
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
 
+    void on_back_pushbutton_clicked();
+
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
     void part_has_to_be_remove(CustomTypes::PartType part_type);

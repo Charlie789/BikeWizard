@@ -40,7 +40,6 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
         break;
     case CustomTypes::PartFork:
         m_model_fork = model;
-        ui->fork_tableview->setModel(m_model_fork);
         break;
     case CustomTypes::PartFrontWheel:
         m_model_front_wheel = model;
@@ -117,4 +116,9 @@ void MainWindow::prepare_delete_button(CustomTypes::PartType part_type, QList<QS
             add_delete_button(i);
         }
     }
+}
+
+void MainWindow::on_back_pushbutton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }

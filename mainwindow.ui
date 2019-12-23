@@ -47,8 +47,8 @@
        <rect>
         <x>30</x>
         <y>70</y>
-        <width>256</width>
-        <height>192</height>
+        <width>691</width>
+        <height>341</height>
        </rect>
       </property>
       <property name="selectionMode">
@@ -56,16 +56,6 @@
       </property>
       <property name="selectionBehavior">
        <enum>QAbstractItemView::SelectRows</enum>
-      </property>
-     </widget>
-     <widget class="QTableView" name="fork_tableview">
-      <property name="geometry">
-       <rect>
-        <x>360</x>
-        <y>20</y>
-        <width>256</width>
-        <height>192</height>
-       </rect>
       </property>
      </widget>
      <widget class="QPushButton" name="accept_pushbutton">
@@ -79,6 +69,19 @@
       </property>
       <property name="text">
        <string>Akceptuj</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="back_pushbutton">
+      <property name="geometry">
+       <rect>
+        <x>120</x>
+        <y>20</y>
+        <width>80</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Wstecz</string>
       </property>
      </widget>
     </widget>
