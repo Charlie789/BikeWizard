@@ -95,16 +95,16 @@ void MainWindow::delete_part_button_clicked()
 void MainWindow::on_accept_pushbutton_clicked()
 {
     CustomTypes::PartType part_type = (CustomTypes::PartType)ui->part_tableview->property("part_type").toInt();
-    QModelIndexList list;
+    QList<QString> list;
+    QModelIndex index = ui->part_tableview->selectionModel()->currentIndex();
     for (int column = 0; column < ui->part_tableview->model()->columnCount(); column++) {
-        QModelIndex index = ui->part_tableview->selectionModel()->currentIndex();
-        list << (ui->part_tableview->model()->index(index.row(), column));
+        list << ui->part_tableview->model()->index(index.row(), column).data().toString();
     }
     emit part_changed(part_type, &list);
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWindow::prepare_delete_button(CustomTypes::PartType part_type, QModelIndexList *)
+void MainWindow::prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *)
 {
     for (int i = 0; i < ui->selected_parts_tableview->model()->rowCount(); ++i){
         QModelIndex index_part_type = ui->selected_parts_tableview->model()->index(i, TableProperties::SelectedParts::ColumnPartType);

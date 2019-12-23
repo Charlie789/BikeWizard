@@ -37,10 +37,10 @@ private slots:
     void select_part_button_clicked();
     void delete_part_button_clicked();
     void on_accept_pushbutton_clicked();
-    void prepare_delete_button(CustomTypes::PartType part_type, QModelIndexList*);
+    void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
 
 signals:
-    void part_changed(CustomTypes::PartType part_type, QModelIndexList* list);
+    void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
     void part_has_to_be_remove(CustomTypes::PartType part_type);
 };
 #endif // MAINWINDOW_H

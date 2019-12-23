@@ -11,7 +11,8 @@ namespace CustomTypes {
     };
 
     enum AttributeName{
-        AttributeWheelSize
+        AttributeWheelSize,
+        AttributeAxleTypeFront
     };
 
 }

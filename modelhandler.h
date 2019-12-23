@@ -16,11 +16,13 @@ class ModelHandler : public QObject
     typedef QPair<CustomTypes::AttributeName, QString> PartAttribute;
 
     Q_PROPERTY(PartAttribute attribute_wheel_size READ attribute_wheel_size WRITE setAttribute_wheel_size NOTIFY attribute_wheel_sizeChanged);
+    Q_PROPERTY(PartAttribute attribute_axle_type_front READ attribute_axle_type_front WRITE setAttribute_axle_type_front NOTIFY attribute_axle_type_frontChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
 
     PartAttribute attribute_wheel_size() const;
+    PartAttribute attribute_axle_type_front() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -33,27 +35,30 @@ private:
 
     QStandardItemModel m_model_selected_parts;
 
-    PartAttribute m_attribute_wheel_size;
-
     void property_handler(PartAttribute attribute);
 
+    PartAttribute m_attribute_wheel_size;
+    PartAttribute m_attribute_axle_type_front;
 
 signals:
-    void attribute_wheel_sizeChanged(PartAttribute attribute_wheel_size);
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
     void selected_parts_model_ready(QStandardItemModel* model);
     void part_deleted(CustomTypes::PartType part_type);
 
+    void attribute_wheel_sizeChanged(PartAttribute attribute_wheel_size);
+    void attribute_axle_type_frontChanged(PartAttribute attribute_axle_type_front);
+
 public slots:
     void init();
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
-    void set_properties(CustomTypes::PartType part_type, QModelIndexList* list);
+    void set_properties(CustomTypes::PartType part_type, QList<QString> *list);
     void clean_properties(CustomTypes::PartType part_type);
-    void set_selected_part(CustomTypes::PartType part_type, QModelIndexList* list);
+    void set_selected_part(CustomTypes::PartType part_type, QList<QString> *list);
     void delete_selected_part(CustomTypes::PartType part_type);
     QString create_filter(CustomTypes::PartType part_type);
 
     void setAttribute_wheel_size(PartAttribute attribute_wheel_size);
+    void setAttribute_axle_type_front(PartAttribute attribute_axle_type_front);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
