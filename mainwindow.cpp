@@ -50,6 +50,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartHeadset:
         m_model_headset = model;
         break;
+    case CustomTypes::PartHandlebar:
+        m_model_handlebar = model;
+        break;
+    case CustomTypes::PartStem:
+        m_model_stem = model;
+        break;
     }
 }
 
@@ -84,6 +90,12 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartHeadset:
         ui->part_tableview->setModel(m_model_headset);
+        break;
+    case CustomTypes::PartHandlebar:
+        ui->part_tableview->setModel(m_model_handlebar);
+        break;
+    case CustomTypes::PartStem:
+        ui->part_tableview->setModel(m_model_stem);
         break;
     }
     ui->part_tableview->hideColumn(2);

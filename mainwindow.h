@@ -25,6 +25,8 @@ private:
     QSqlTableModel* m_model_front_wheel;
     QSqlTableModel* m_model_rear_wheel;
     QSqlTableModel* m_model_headset;
+    QSqlTableModel* m_model_handlebar;
+    QSqlTableModel* m_model_stem;
 
     QStandardItemModel* m_selected_parts_model;
 
@@ -40,7 +42,6 @@ private slots:
     void delete_part_button_clicked();
     void on_accept_pushbutton_clicked();
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
-
     void on_back_pushbutton_clicked();
 
 signals:

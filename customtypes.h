@@ -9,7 +9,9 @@ namespace CustomTypes {
         PartFork,
         PartFrontWheel,
         PartRearWheel,
-        PartHeadset
+        PartHeadset,
+        PartHandlebar,
+        PartStem
     };
 
     enum AttributeName {
@@ -17,7 +19,9 @@ namespace CustomTypes {
         AttributeAxleTypeFront,
         AttributeAxleTypeRear,
         AttributeSteererTubeDiameter,
-        AttributeHeadset
+        AttributeHeadset,
+        AttributeHandlebarDiameter,
+        AttributeStemSteererTubeDiameter
     };
 
 }

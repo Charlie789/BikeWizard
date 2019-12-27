@@ -20,6 +20,8 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_axle_type_rear READ attribute_axle_type_rear WRITE setAttribute_axle_type_rear NOTIFY attribute_axle_type_rearChanged);
     Q_PROPERTY(PartAttribute attribute_steerer_tube_diameter READ attribute_steerer_tube_diameter WRITE setAttribute_steerer_tube_diameter NOTIFY attribute_steerer_tube_diameterChanged);
     Q_PROPERTY(PartAttribute attribute_headset READ attribute_headset WRITE setAttribute_headset NOTIFY attribute_headsetChanged);
+    Q_PROPERTY(PartAttribute attribute_handlebar_diameter READ attribute_handlebar_diameter WRITE setAttribute_handlebar_diameter NOTIFY attribute_handlebar_diameterChanged);
+    Q_PROPERTY(PartAttribute attribute_stem_steerer_tube_diameter READ attribute_stem_steerer_tube_diameter WRITE setAttribute_stem_steerer_tube_diameter NOTIFY attribute_stem_steerer_tube_diameterChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -29,6 +31,8 @@ public:
     PartAttribute attribute_axle_type_rear() const;
     PartAttribute attribute_steerer_tube_diameter() const;
     PartAttribute attribute_headset() const;
+    PartAttribute attribute_handlebar_diameter() const;
+    PartAttribute attribute_stem_steerer_tube_diameter() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -41,6 +45,8 @@ private:
     QSqlTableModel* m_model_front_wheel;
     QSqlTableModel* m_model_rear_wheel;
     QSqlTableModel* m_model_headset;
+    QSqlTableModel* m_model_handlebar;
+    QSqlTableModel* m_model_stem;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -51,6 +57,8 @@ private:
     PartAttribute m_attribute_axle_type_rear;
     PartAttribute m_attribute_steerer_tube_diameter;
     PartAttribute m_attribute_headset;
+    PartAttribute m_attribute_handlebar_diameter;
+    PartAttribute m_attribute_stem_steerer_tube_diameter;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -62,6 +70,8 @@ signals:
     void attribute_axle_type_rearChanged(PartAttribute attribute_axle_type_rear);
     void attribute_steerer_tube_diameterChanged(PartAttribute attribute_steerer_tube_diameter);
     void attribute_headsetChanged(PartAttribute attribute_headset);
+    void attribute_handlebar_diameterChanged(PartAttribute attribute_handlebar_diameter);
+    void attribute_stem_steerer_tube_diameterChanged(PartAttribute attribute_stem_steerer_tube_diameter);
 
 public slots:
     void init();
@@ -77,6 +87,8 @@ public slots:
     void setAttribute_axle_type_rear(PartAttribute attribute_axle_type_rear);
     void setAttribute_steerer_tube_diameter(PartAttribute attribute_steerer_tube_diameter);
     void setAttribute_headset(PartAttribute attribute_headset);
+    void setAttribute_handlebar_diameter(PartAttribute attribute_handlebar_diameter);
+    void setAttribute_stem_steerer_tube_diameter(PartAttribute attribute_stem_steerer_tube_diameter);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
