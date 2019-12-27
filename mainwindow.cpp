@@ -47,6 +47,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearWheel:
         m_model_rear_wheel = model;
         break;
+    case CustomTypes::PartHeadset:
+        m_model_headset = model;
+        break;
     }
 }
 
@@ -78,6 +81,10 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartRearWheel:
         ui->part_tableview->setModel(m_model_rear_wheel);
+        break;
+    case CustomTypes::PartHeadset:
+        ui->part_tableview->setModel(m_model_headset);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);

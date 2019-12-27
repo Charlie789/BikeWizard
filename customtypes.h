@@ -4,24 +4,27 @@
 #include <QMap>
 
 namespace CustomTypes {
-    enum PartType{
+    enum PartType {
         PartFrame,
         PartFork,
         PartFrontWheel,
-        PartRearWheel
+        PartRearWheel,
+        PartHeadset
     };
 
-    enum AttributeName{
+    enum AttributeName {
         AttributeWheelSize,
         AttributeAxleTypeFront,
-        AttributeAxleTypeRear
+        AttributeAxleTypeRear,
+        AttributeSteererTubeDiameter,
+        AttributeHeadset
     };
 
 }
 
 namespace TableProperties {
     namespace SelectedParts {
-        enum Columns{
+        enum Columns {
             ColumnPartName = 1,
             ColumnPartType,
             ColumnPartID
