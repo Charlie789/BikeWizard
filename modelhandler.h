@@ -50,7 +50,7 @@ private:
 
     QStandardItemModel m_model_selected_parts;
 
-    void property_handler(PartAttribute attribute);
+    void filter_handler(PartAttribute);
 
     PartAttribute m_attribute_wheel_size;
     PartAttribute m_attribute_axle_type_front;

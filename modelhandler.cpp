@@ -15,13 +15,13 @@ ModelHandler::ModelHandler(QObject *parent) :
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
-    connect(this, &ModelHandler::attribute_wheel_sizeChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_axle_type_frontChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_axle_type_rearChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_steerer_tube_diameterChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_headsetChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_handlebar_diameterChanged, this, &ModelHandler::property_handler);
-    connect(this, &ModelHandler::attribute_stem_steerer_tube_diameterChanged, this, &ModelHandler::property_handler);
+    connect(this, &ModelHandler::attribute_wheel_sizeChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_axle_type_frontChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_axle_type_rearChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_steerer_tube_diameterChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_headsetChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_handlebar_diameterChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_stem_steerer_tube_diameterChanged, this, &ModelHandler::filter_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -59,45 +59,15 @@ ModelHandler::PartAttribute ModelHandler::attribute_stem_steerer_tube_diameter()
     return m_attribute_stem_steerer_tube_diameter;
 }
 
-void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
+void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
-    switch(attribute.first){
-    case CustomTypes::AttributeWheelSize:
-        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
-        m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
-        m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
-        m_model_rear_wheel->setFilter(create_filter(CustomTypes::PartRearWheel));
-        break;
-    case CustomTypes::AttributeAxleTypeFront:
-        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
-        m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
-        break;
-    case CustomTypes::AttributeAxleTypeRear:
-        m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
-        m_model_rear_wheel->setFilter(create_filter(CustomTypes::PartRearWheel));
-        break;
-    case CustomTypes::AttributeSteererTubeDiameter:
-        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
-        m_model_headset->setFilter(create_filter(CustomTypes::PartHeadset));
-        m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
-        break;
-    case CustomTypes::AttributeHeadset:
-        m_model_headset->setFilter(create_filter(CustomTypes::PartHeadset));
-        m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
-        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
-        m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
-        break;
-    case CustomTypes::AttributeHandlebarDiameter:
-        m_model_handlebar->setFilter(create_filter(CustomTypes::PartHandlebar));
-        m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
-        break;
-    case CustomTypes::AttributeStemSteererTubeDiameter:
-        m_model_handlebar->setFilter(create_filter(CustomTypes::PartHandlebar));
-        m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
-        m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
-        m_model_headset->setFilter(create_filter(CustomTypes::PartHeadset));
-        break;
-    }
+    m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
+    m_model_fork->setFilter(create_filter(CustomTypes::PartFork));
+    m_model_front_wheel->setFilter(create_filter(CustomTypes::PartFrontWheel));
+    m_model_rear_wheel->setFilter(create_filter(CustomTypes::PartRearWheel));
+    m_model_headset->setFilter(create_filter(CustomTypes::PartHeadset));
+    m_model_handlebar->setFilter(create_filter(CustomTypes::PartHandlebar));
+    m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
 }
 
 void ModelHandler::init()
