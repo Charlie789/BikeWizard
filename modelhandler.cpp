@@ -355,6 +355,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_steerer_tube_diameter().second != "-1"){
             filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter = '%1')").arg(attribute_steerer_tube_diameter().second);
         }
+        if (attribute_stem_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(attribute_stem_steerer_tube_diameter().second);
+        }
         break;
     }
     case CustomTypes::PartFrontWheel:
