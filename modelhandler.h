@@ -30,6 +30,7 @@ private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
     QMap<CustomTypes::PartType, QList<QString>> m_map_part_property_list;
     QMap<CustomTypes::AttributeName, int> m_map_attribute_counter;
+    QMap<CustomTypes::PartType, QMap<CustomTypes::AttributeName, int>> m_map_column_index;
 
     QSqlTableModel* m_model_frame;
     QSqlTableModel* m_model_fork;

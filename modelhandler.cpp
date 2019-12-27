@@ -52,10 +52,31 @@ void ModelHandler::property_handler(ModelHandler::PartAttribute attribute)
 
 void ModelHandler::init()
 {
-    m_map_part_table.insert(CustomTypes::PartFrame, "frame");
-    m_map_part_table.insert(CustomTypes::PartFork, "fork");
-    m_map_part_table.insert(CustomTypes::PartFrontWheel, "front_wheel");
-    m_map_part_table.insert(CustomTypes::PartRearWheel, "rear_wheel");
+    QMap<CustomTypes::AttributeName, int> m_map_part_column_index;
+
+    m_map_part_table.insert(CustomTypes::PartFrame, "frame_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeRear, 4);
+    m_map_column_index.insert(CustomTypes::PartFrame, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartFork, "fork_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeFront, 4);
+    m_map_column_index.insert(CustomTypes::PartFork, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartFrontWheel, "front_wheel_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeFront, 4);
+    m_map_column_index.insert(CustomTypes::PartFrontWheel, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartRearWheel, "rear_wheel_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeRear, 4);
+    m_map_column_index.insert(CustomTypes::PartRearWheel, m_map_part_column_index);
+    m_map_part_column_index.clear();
 
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
@@ -86,27 +107,35 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
 {
     switch(part_type){
     case CustomTypes::PartFork:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
+                                              list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeWheelSize])));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, list->at(3)));
+        setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront,
+                                                   list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeAxleTypeFront])));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]++;
         break;
     case CustomTypes::PartFrame:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
+                                              list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeWheelSize])));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, list->at(3)));
+        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeAxleTypeRear])));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
         break;
     case CustomTypes::PartFrontWheel:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
+                                              list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeWheelSize])));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, list->at(3)));
+        setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront,
+                                                   list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeAxleTypeFront])));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]++;
         break;
     case CustomTypes::PartRearWheel:
-        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, list->at(2)));
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
+                                              list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeWheelSize])));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, list->at(3)));
+        setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear,
+                                                  list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeAxleTypeRear])));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
         break;
     }
