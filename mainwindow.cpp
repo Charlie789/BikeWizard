@@ -79,6 +79,7 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartRearWheel:
         ui->part_tableview->setModel(m_model_rear_wheel);
     }
+    ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
     ui->stackedWidget->setCurrentIndex(1);
 }
