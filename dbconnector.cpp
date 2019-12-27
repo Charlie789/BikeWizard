@@ -1,4 +1,5 @@
 #include "dbconnector.h"
+#include <QDebug>
 
 DbConnector::DbConnector(QObject *parent) : QObject(parent)
 {
@@ -14,6 +15,8 @@ void DbConnector::connect_to_db()
     db.setPassword("");
     if (db.open())
         emit db_ready(&db);
+    else
+        qWarning() << "Nie udało się otworzyć połączenia z bazą danych!";
 }
 
 void DbConnector::set_map_part(QMap<CustomTypes::PartType, QString> map_part_table)
