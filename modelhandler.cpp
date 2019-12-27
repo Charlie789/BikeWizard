@@ -11,7 +11,8 @@ ModelHandler::ModelHandler(QObject *parent) :
     m_attribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter, "-1")),
     m_attribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1")),
     m_attribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1")),
-    m_attribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1"))
+    m_attribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1")),
+    m_attribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"))
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
@@ -22,6 +23,7 @@ ModelHandler::ModelHandler(QObject *parent) :
     connect(this, &ModelHandler::attribute_headsetChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_handlebar_diameterChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_stem_steerer_tube_diameterChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_seatpost_diameterChanged, this, &ModelHandler::filter_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -59,6 +61,11 @@ ModelHandler::PartAttribute ModelHandler::attribute_stem_steerer_tube_diameter()
     return m_attribute_stem_steerer_tube_diameter;
 }
 
+ModelHandler::PartAttribute ModelHandler::attribute_seatpost_diameter() const
+{
+    return m_attribute_seatpost_diameter;
+}
+
 void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
     m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
@@ -68,6 +75,7 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_headset->setFilter(create_filter(CustomTypes::PartHeadset));
     m_model_handlebar->setFilter(create_filter(CustomTypes::PartHandlebar));
     m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
+    m_model_seatpost->setFilter(create_filter(CustomTypes::PartSeatpost));
 }
 
 void ModelHandler::init()
@@ -78,6 +86,7 @@ void ModelHandler::init()
     m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
     m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeRear, 4);
     m_map_part_column_index.insert(CustomTypes::AttributeHeadset, 5);
+    m_map_part_column_index.insert(CustomTypes::AttributeSeatpostDiameter, 6);
     m_map_column_index.insert(CustomTypes::PartFrame, m_map_part_column_index);
     m_map_part_column_index.clear();
 
@@ -116,12 +125,18 @@ void ModelHandler::init()
     m_map_column_index.insert(CustomTypes::PartStem, m_map_part_column_index);
     m_map_part_column_index.clear();
 
+    m_map_part_table.insert(CustomTypes::PartSeatpost, "seatpost_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeSeatpostDiameter, 3);
+    m_map_column_index.insert(CustomTypes::PartSeatpost, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeHeadset, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeHandlebarDiameter, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeStemSteererTubeDiameter, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeSeatpostDiameter, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -150,6 +165,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
     case CustomTypes::PartStem:
         m_model_stem = model;
         break;
+    case CustomTypes::PartSeatpost:
+        m_model_seatpost = model;
+        break;
     }
 }
 
@@ -177,6 +195,9 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset,
                                                   list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeHeadset])));
         m_map_attribute_counter[CustomTypes::AttributeHeadset]++;
+        setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeSeatpostDiameter])));
+        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
         break;
     case CustomTypes::PartFrontWheel:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
@@ -212,6 +233,11 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
                                                   list->at(m_map_column_index[CustomTypes::PartStem][CustomTypes::AttributeStemSteererTubeDiameter])));
         m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter]++;
         break;
+    case CustomTypes::PartSeatpost:
+        setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
+                                                  list->at(m_map_column_index[CustomTypes::PartSeatpost][CustomTypes::AttributeSeatpostDiameter])));
+        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
+        break;
     }
 }
 
@@ -242,6 +268,9 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeHeadset]--;
         if (m_map_attribute_counter[CustomTypes::AttributeHeadset] <= 0)
             setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
+            setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -286,6 +315,13 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter] <= 0)
             setAttribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1"));
+        break;
+    }
+    case CustomTypes::PartSeatpost:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
+            setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
         break;
     }
     }
@@ -358,6 +394,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_stem_steerer_tube_diameter().second != "-1"){
             filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(attribute_stem_steerer_tube_diameter().second);
         }
+        if (attribute_seatpost_diameter().second != "-1"){
+            filter_properties_list << QString("seatpost_diameter = '%1'").arg(attribute_seatpost_diameter().second);
+        }
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -410,6 +449,13 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         if (attribute_headset().second != "-1"){
             filter_properties_list << QString("steerer_tube_diameter IN (SELECT stem_tube_diameter FROM steerer_tube_diameter_compatibility WHERE steerer_tube_diameter in (SELECT steerer_tube_diameter FROM headset_compatibility WHERE shis = '%1'))").arg(attribute_headset().second);
+        }
+        break;
+    }
+    case CustomTypes::PartSeatpost:
+    {
+        if (attribute_seatpost_diameter().second != "-1"){
+            filter_properties_list << QString("seatpost_diameter = '%1'").arg(attribute_seatpost_diameter().second);
         }
         break;
     }
@@ -480,6 +526,15 @@ void ModelHandler::setAttribute_stem_steerer_tube_diameter(ModelHandler::PartAtt
 
     m_attribute_stem_steerer_tube_diameter = attribute_stem_steerer_tube_diameter;
     emit attribute_stem_steerer_tube_diameterChanged(m_attribute_stem_steerer_tube_diameter);
+}
+
+void ModelHandler::setAttribute_seatpost_diameter(ModelHandler::PartAttribute attribute_seatpost_diameter)
+{
+    if (m_attribute_seatpost_diameter == attribute_seatpost_diameter)
+        return;
+
+    m_attribute_seatpost_diameter = attribute_seatpost_diameter;
+    emit attribute_seatpost_diameterChanged(m_attribute_seatpost_diameter);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)

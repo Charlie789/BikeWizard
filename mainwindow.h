@@ -27,6 +27,7 @@ private:
     QSqlTableModel* m_model_headset;
     QSqlTableModel* m_model_handlebar;
     QSqlTableModel* m_model_stem;
+    QSqlTableModel* m_model_seatpost;
 
     QStandardItemModel* m_selected_parts_model;
 

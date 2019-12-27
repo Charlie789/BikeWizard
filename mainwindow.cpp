@@ -56,6 +56,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartStem:
         m_model_stem = model;
         break;
+    case CustomTypes::PartSeatpost:
+        m_model_seatpost = model;
+        break;
     }
 }
 
@@ -96,6 +99,9 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartStem:
         ui->part_tableview->setModel(m_model_stem);
+        break;
+    case CustomTypes::PartSeatpost:
+        ui->part_tableview->setModel(m_model_seatpost);
         break;
     }
     ui->part_tableview->hideColumn(2);
