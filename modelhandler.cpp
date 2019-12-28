@@ -14,7 +14,11 @@ ModelHandler::ModelHandler(QObject *parent) :
     m_attribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1")),
     m_attribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1")),
     m_attribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1")),
-    m_attribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1"))
+    m_attribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1")),
+    m_attribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1")),
+    m_attribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1")),
+    m_attribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength, "-1"))
+
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
@@ -28,6 +32,9 @@ ModelHandler::ModelHandler(QObject *parent) :
     connect(this, &ModelHandler::attribute_seatpost_diameterChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_saddle_mountingChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_tire_widthChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_bb_typeChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_bb_axis_typeChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_bb_axis_lengthChanged, this, &ModelHandler::filter_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -80,6 +87,21 @@ ModelHandler::PartAttribute ModelHandler::attribute_tire_width() const
     return m_attribute_tire_width;
 }
 
+ModelHandler::PartAttribute ModelHandler::attribute_bb_type() const
+{
+    return m_attribute_bb_type;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_bb_axis_type() const
+{
+    return m_attribute_bb_axis_type;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_bb_axis_length() const
+{
+    return m_attribute_bb_axis_length;
+}
+
 void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
     m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
@@ -93,6 +115,7 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_saddle->setFilter(create_filter(CustomTypes::PartSaddle));
     m_model_tire->setFilter(create_filter(CustomTypes::PartTire));
     m_model_inner_tube->setFilter(create_filter(CustomTypes::PartInnerTube));
+    m_model_bb->setFilter(create_filter(CustomTypes::PartBB));
 }
 
 void ModelHandler::init()
@@ -104,6 +127,7 @@ void ModelHandler::init()
     m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeRear, 4);
     m_map_part_column_index.insert(CustomTypes::AttributeHeadset, 5);
     m_map_part_column_index.insert(CustomTypes::AttributeSeatpostDiameter, 6);
+    m_map_part_column_index.insert(CustomTypes::AttributeBBType, 7);
     m_map_column_index.insert(CustomTypes::PartFrame, m_map_part_column_index);
     m_map_part_column_index.clear();
 
@@ -164,6 +188,13 @@ void ModelHandler::init()
     m_map_column_index.insert(CustomTypes::PartInnerTube, m_map_part_column_index);
     m_map_part_column_index.clear();
 
+    m_map_part_table.insert(CustomTypes::PartBB, "bottom_bracket_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeBBAxisLength, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeBBType, 4);
+    m_map_part_column_index.insert(CustomTypes::AttributeBBAxisType, 5);
+    m_map_column_index.insert(CustomTypes::PartBB, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
@@ -173,6 +204,9 @@ void ModelHandler::init()
     m_map_attribute_counter.insert(CustomTypes::AttributeSeatpostDiameter, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeSaddleMounting, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeTireWidth, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeBBType, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeBBAxisType, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeBBAxisLength, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -213,6 +247,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
     case CustomTypes::PartInnerTube:
         m_model_inner_tube = model;
         break;
+    case CustomTypes::PartBB:
+        m_model_bb = model;
+        break;
     }
 }
 
@@ -243,6 +280,9 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
                                                   list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeSeatpostDiameter])));
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
+        setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeBBType])));
+        m_map_attribute_counter[CustomTypes::AttributeBBType]++;
         break;
     case CustomTypes::PartFrontWheel:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
@@ -301,6 +341,17 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         break;
     case CustomTypes::PartInnerTube:
         break;
+    case CustomTypes::PartBB:
+        setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType,
+                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBType])));
+        m_map_attribute_counter[CustomTypes::AttributeBBType]++;
+        setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType,
+                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBAxisType])));
+        m_map_attribute_counter[CustomTypes::AttributeBBAxisType]++;
+        setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength,
+                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBAxisLength])));
+        m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]++;
+        break;
     }
 }
 
@@ -334,6 +385,9 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
             setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeBBType]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeBBType] <= 0)
+            setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -411,6 +465,19 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
     {
         break;
     }
+    case CustomTypes::PartBB:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeBBType]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeBBType] <= 0)
+            setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeBBAxisType]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeBBAxisType] <= 0)
+            setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeBBAxisLength] <= 0)
+            setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength, "-1"));
+        break;
+    }
     }
 }
 
@@ -483,6 +550,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         if (attribute_seatpost_diameter().second != "-1"){
             filter_properties_list << QString("seatpost_diameter = '%1'").arg(attribute_seatpost_diameter().second);
+        }
+        if (attribute_bb_type().second != "-1"){
+            filter_properties_list << QString("bb_type = '%1'").arg(attribute_bb_type().second);
         }
         break;
     }
@@ -570,6 +640,19 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         if (attribute_tire_width().second != "-1"){
             filter_properties_list << QString("min_tire_width <= '%1' AND max_tire_width >= '%1'").arg(attribute_tire_width().second);
+        }
+        break;
+    }
+    case CustomTypes::PartBB:
+    {
+        if (attribute_bb_type().second != "-1"){
+            filter_properties_list << QString("bb_type = '%1'").arg(attribute_bb_type().second);
+        }
+        if (attribute_bb_axis_type().second != "-1"){
+            filter_properties_list << QString("bb_axis_type = '%1'").arg(attribute_bb_axis_type().second);
+        }
+        if (attribute_bb_axis_length().second != "-1" && attribute_bb_axis_length().second != "0"){
+            filter_properties_list << QString("bb_axis_length = '%1'").arg(attribute_bb_axis_length().second);
         }
         break;
     }
@@ -667,6 +750,33 @@ void ModelHandler::setAttribute_tire_width(ModelHandler::PartAttribute attribute
 
     m_attribute_tire_width = attribute_tire_width;
     emit attribute_tire_widthChanged(m_attribute_tire_width);
+}
+
+void ModelHandler::setAttribute_bb_type(ModelHandler::PartAttribute attribute_bb_type)
+{
+    if (m_attribute_bb_type == attribute_bb_type)
+        return;
+
+    m_attribute_bb_type = attribute_bb_type;
+    emit attribute_bb_typeChanged(m_attribute_bb_type);
+}
+
+void ModelHandler::setAttribute_bb_axis_type(ModelHandler::PartAttribute attribute_bb_axis_type)
+{
+    if (m_attribute_bb_axis_type == attribute_bb_axis_type)
+        return;
+
+    m_attribute_bb_axis_type = attribute_bb_axis_type;
+    emit attribute_bb_axis_typeChanged(m_attribute_bb_axis_type);
+}
+
+void ModelHandler::setAttribute_bb_axis_length(ModelHandler::PartAttribute attribute_bb_axis_length)
+{
+    if (m_attribute_bb_axis_length == attribute_bb_axis_length)
+        return;
+
+    m_attribute_bb_axis_length = attribute_bb_axis_length;
+    emit attribute_bb_axis_lengthChanged(m_attribute_bb_axis_length);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)

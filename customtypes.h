@@ -15,7 +15,8 @@ namespace CustomTypes {
         PartSeatpost,
         PartSaddle,
         PartTire,
-        PartInnerTube
+        PartInnerTube,
+        PartBB
     };
 
     enum AttributeName {
@@ -28,7 +29,10 @@ namespace CustomTypes {
         AttributeStemSteererTubeDiameter,
         AttributeSeatpostDiameter,
         AttributeSaddleMounting,
-        AttributeTireWidth
+        AttributeTireWidth,
+        AttributeBBType,
+        AttributeBBAxisType,
+        AttributeBBAxisLength
     };
 
 }

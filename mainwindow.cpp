@@ -72,6 +72,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartInnerTube:
         m_model_inner_tube = model;
         break;
+    case CustomTypes::PartBB:
+        m_model_bb = model;
+        break;
     }
 }
 
@@ -129,6 +132,9 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartInnerTube:
         ui->part_tableview->setModel(m_model_inner_tube);
+        break;
+    case CustomTypes::PartBB:
+        ui->part_tableview->setModel(m_model_bb);
         break;
     }
     ui->part_tableview->hideColumn(2);
