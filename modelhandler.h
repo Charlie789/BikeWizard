@@ -28,6 +28,11 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_bb_type READ attribute_bb_type WRITE setAttribute_bb_type NOTIFY attribute_bb_typeChanged);
     Q_PROPERTY(PartAttribute attribute_bb_axis_type READ attribute_bb_axis_type WRITE setAttribute_bb_axis_type NOTIFY attribute_bb_axis_typeChanged);
     Q_PROPERTY(PartAttribute attribute_bb_axis_length READ attribute_bb_axis_length WRITE setAttribute_bb_axis_length NOTIFY attribute_bb_axis_lengthChanged);
+    Q_PROPERTY(PartAttribute attribute_chain_speed READ attribute_chain_speed WRITE setAttribute_chain_speed NOTIFY attribute_chain_speedChanged);
+    Q_PROPERTY(PartAttribute attribute_min_sprocket_tooth READ attribute_min_sprocket_tooth WRITE setAttribute_min_sprocket_tooth NOTIFY attribute_min_sprocket_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_max_sprocket_tooth READ attribute_max_sprocket_tooth WRITE setAttribute_max_sprocket_tooth NOTIFY attribute_max_sprocket_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_min_derailleur_tooth READ attribute_min_derailleur_tooth WRITE setAttribute_min_derailleur_tooth NOTIFY attribute_min_derailleur_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_max_derailleur_tooth READ attribute_max_derailleur_tooth WRITE setAttribute_max_derailleur_tooth NOTIFY attribute_max_derailleur_toothChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -45,6 +50,11 @@ public:
     PartAttribute attribute_bb_type() const;
     PartAttribute attribute_bb_axis_type() const;
     PartAttribute attribute_bb_axis_length() const;
+    PartAttribute attribute_chain_speed() const;
+    PartAttribute attribute_min_sprocket_tooth() const;
+    PartAttribute attribute_max_sprocket_tooth() const;
+    PartAttribute attribute_min_derailleur_tooth() const;
+    PartAttribute attribute_max_derailleur_tooth() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -65,6 +75,9 @@ private:
     QSqlTableModel* m_model_inner_tube;
     QSqlTableModel* m_model_bb;
     QSqlTableModel* m_model_grip;
+    QSqlTableModel* m_model_cassette;
+    QSqlTableModel* m_model_chain;
+    QSqlTableModel* m_model_rear_derailleur;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -83,6 +96,11 @@ private:
     PartAttribute m_attribute_bb_type;
     PartAttribute m_attribute_bb_axis_type;
     PartAttribute m_attribute_bb_axis_length;
+    PartAttribute m_attribute_chain_speed;
+    PartAttribute m_attribute_min_sprocket_tooth;
+    PartAttribute m_attribute_max_sprocket_tooth;
+    PartAttribute m_attribute_min_derailleur_tooth;
+    PartAttribute m_attribute_max_derailleur_tooth;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -102,6 +120,11 @@ signals:
     void attribute_bb_typeChanged(PartAttribute attribute_bb_type);
     void attribute_bb_axis_typeChanged(PartAttribute attribute_bb_axis_type);
     void attribute_bb_axis_lengthChanged(PartAttribute attribute_bb_axis_length);
+    void attribute_chain_speedChanged(PartAttribute attribute_chain_speed);
+    void attribute_min_sprocket_toothChanged(PartAttribute attribute_min_sprocket_tooth);
+    void attribute_max_sprocket_toothChanged(PartAttribute attribute_max_sprocket_tooth);
+    void attribute_min_derailleur_toothChanged(PartAttribute attribute_min_derailleur_tooth);
+    void attribute_max_derailleur_toothChanged(PartAttribute attribute_max_derailleur_tooth);
 
 public slots:
     void init();
@@ -125,6 +148,11 @@ public slots:
     void setAttribute_bb_type(PartAttribute attribute_bb_type);
     void setAttribute_bb_axis_type(PartAttribute attribute_bb_axis_type);
     void setAttribute_bb_axis_length(PartAttribute attribute_bb_axis_length);
+    void setAttribute_chain_speed(PartAttribute attribute_chain_speed);
+    void setAttribute_min_sprocket_tooth(PartAttribute attribute_min_sprocket_tooth);
+    void setAttribute_max_sprocket_tooth(PartAttribute attribute_max_sprocket_tooth);
+    void setAttribute_min_derailleur_tooth(PartAttribute attribute_min_derailleur_tooth);
+    void setAttribute_max_derailleur_tooth(PartAttribute attribute_max_derailleur_tooth);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);

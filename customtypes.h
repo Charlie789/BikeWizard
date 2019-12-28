@@ -17,7 +17,10 @@ namespace CustomTypes {
         PartTire,
         PartInnerTube,
         PartBB,
-        PartGrip
+        PartGrip,
+        PartCassette,
+        PartChain,
+        PartRearDerailleur
     };
 
     enum AttributeName {
@@ -33,7 +36,12 @@ namespace CustomTypes {
         AttributeTireWidth,
         AttributeBBType,
         AttributeBBAxisType,
-        AttributeBBAxisLength
+        AttributeBBAxisLength,
+        AttributeChainSpeed,
+        AttributeMinSprocketTooth,
+        AttributeMaxSprocketTooth,
+        AttributeMinDerailleurTooth,
+        AttributeMaxDerailleurTooth
     };
 
 }

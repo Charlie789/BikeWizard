@@ -78,6 +78,15 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartGrip:
         m_model_grip = model;
         break;
+    case CustomTypes::PartCassette:
+        m_model_cassette = model;
+        break;
+    case CustomTypes::PartChain:
+        m_model_chain = model;
+        break;
+    case CustomTypes::PartRearDerailleur:
+        m_model_rear_derailleur = model;
+        break;
     }
 }
 
@@ -141,6 +150,15 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartGrip:
         ui->part_tableview->setModel(m_model_grip);
+        break;
+    case CustomTypes::PartCassette:
+        ui->part_tableview->setModel(m_model_cassette);
+        break;
+    case CustomTypes::PartChain:
+        ui->part_tableview->setModel(m_model_chain);
+        break;
+    case CustomTypes::PartRearDerailleur:
+        ui->part_tableview->setModel(m_model_rear_derailleur);
         break;
     }
     ui->part_tableview->hideColumn(2);
