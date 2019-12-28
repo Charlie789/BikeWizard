@@ -16,7 +16,8 @@ namespace CustomTypes {
         PartSaddle,
         PartTire,
         PartInnerTube,
-        PartBB
+        PartBB,
+        PartGrip
     };
 
     enum AttributeName {

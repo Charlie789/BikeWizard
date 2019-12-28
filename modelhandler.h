@@ -64,6 +64,7 @@ private:
     QSqlTableModel* m_model_tire;
     QSqlTableModel* m_model_inner_tube;
     QSqlTableModel* m_model_bb;
+    QSqlTableModel* m_model_grip;
 
     QStandardItemModel m_model_selected_parts;
 

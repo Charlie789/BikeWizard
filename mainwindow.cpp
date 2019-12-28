@@ -75,6 +75,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartBB:
         m_model_bb = model;
         break;
+    case CustomTypes::PartGrip:
+        m_model_grip = model;
+        break;
     }
 }
 
@@ -135,6 +138,9 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartBB:
         ui->part_tableview->setModel(m_model_bb);
+        break;
+    case CustomTypes::PartGrip:
+        ui->part_tableview->setModel(m_model_grip);
         break;
     }
     ui->part_tableview->hideColumn(2);

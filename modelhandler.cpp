@@ -116,6 +116,7 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_tire->setFilter(create_filter(CustomTypes::PartTire));
     m_model_inner_tube->setFilter(create_filter(CustomTypes::PartInnerTube));
     m_model_bb->setFilter(create_filter(CustomTypes::PartBB));
+    m_model_grip->setFilter(create_filter(CustomTypes::PartGrip));
 }
 
 void ModelHandler::init()
@@ -195,6 +196,8 @@ void ModelHandler::init()
     m_map_column_index.insert(CustomTypes::PartBB, m_map_part_column_index);
     m_map_part_column_index.clear();
 
+    m_map_part_table.insert(CustomTypes::PartGrip, "grip_view");
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
@@ -249,6 +252,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartBB:
         m_model_bb = model;
+        break;
+    case CustomTypes::PartGrip:
+        m_model_grip = model;
         break;
     }
 }
@@ -351,6 +357,8 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength,
                                                   list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBAxisLength])));
         m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]++;
+        break;
+    case CustomTypes::PartGrip:
         break;
     }
 }
@@ -476,6 +484,10 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBAxisLength] <= 0)
             setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength, "-1"));
+        break;
+    }
+    case CustomTypes::PartGrip:
+    {
         break;
     }
     }
@@ -654,6 +666,10 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_bb_axis_length().second != "-1" && attribute_bb_axis_length().second != "0"){
             filter_properties_list << QString("bb_axis_length = '%1'").arg(attribute_bb_axis_length().second);
         }
+        break;
+    }
+    case CustomTypes::PartGrip:
+    {
         break;
     }
     }
