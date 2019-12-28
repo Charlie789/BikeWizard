@@ -12,7 +12,9 @@ ModelHandler::ModelHandler(QObject *parent) :
     m_attribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1")),
     m_attribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1")),
     m_attribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1")),
-    m_attribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"))
+    m_attribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1")),
+    m_attribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1")),
+    m_attribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1"))
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
@@ -24,6 +26,8 @@ ModelHandler::ModelHandler(QObject *parent) :
     connect(this, &ModelHandler::attribute_handlebar_diameterChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_stem_steerer_tube_diameterChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_seatpost_diameterChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_saddle_mountingChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_tire_widthChanged, this, &ModelHandler::filter_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -66,6 +70,16 @@ ModelHandler::PartAttribute ModelHandler::attribute_seatpost_diameter() const
     return m_attribute_seatpost_diameter;
 }
 
+ModelHandler::PartAttribute ModelHandler::attribute_saddle_mounting() const
+{
+    return m_attribute_saddle_mounting;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_tire_width() const
+{
+    return m_attribute_tire_width;
+}
+
 void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
     m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
@@ -76,6 +90,9 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_handlebar->setFilter(create_filter(CustomTypes::PartHandlebar));
     m_model_stem->setFilter(create_filter(CustomTypes::PartStem));
     m_model_seatpost->setFilter(create_filter(CustomTypes::PartSeatpost));
+    m_model_saddle->setFilter(create_filter(CustomTypes::PartSaddle));
+    m_model_tire->setFilter(create_filter(CustomTypes::PartTire));
+    m_model_inner_tube->setFilter(create_filter(CustomTypes::PartInnerTube));
 }
 
 void ModelHandler::init()
@@ -127,7 +144,24 @@ void ModelHandler::init()
 
     m_map_part_table.insert(CustomTypes::PartSeatpost, "seatpost_view");
     m_map_part_column_index.insert(CustomTypes::AttributeSeatpostDiameter, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeSaddleMounting, 4);
     m_map_column_index.insert(CustomTypes::PartSeatpost, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartSaddle, "saddle_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeSaddleMounting, 3);
+    m_map_column_index.insert(CustomTypes::PartSaddle, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartTire, "tire_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeTireWidth, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 4);
+    m_map_column_index.insert(CustomTypes::PartTire, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartInnerTube, "inner_tube_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 5);
+    m_map_column_index.insert(CustomTypes::PartInnerTube, m_map_part_column_index);
     m_map_part_column_index.clear();
 
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
@@ -137,6 +171,8 @@ void ModelHandler::init()
     m_map_attribute_counter.insert(CustomTypes::AttributeHandlebarDiameter, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeStemSteererTubeDiameter, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeSeatpostDiameter, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeSaddleMounting, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeTireWidth, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -167,6 +203,15 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartSeatpost:
         m_model_seatpost = model;
+        break;
+    case CustomTypes::PartSaddle:
+        m_model_saddle = model;
+        break;
+    case CustomTypes::PartTire:
+        m_model_tire = model;
+        break;
+    case CustomTypes::PartInnerTube:
+        m_model_inner_tube = model;
         break;
     }
 }
@@ -237,6 +282,24 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
                                                   list->at(m_map_column_index[CustomTypes::PartSeatpost][CustomTypes::AttributeSeatpostDiameter])));
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
+        setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting,
+                                                  list->at(m_map_column_index[CustomTypes::PartSeatpost][CustomTypes::AttributeSaddleMounting])));
+        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]++;
+        break;
+    case CustomTypes::PartSaddle:
+        setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting,
+                                                  list->at(m_map_column_index[CustomTypes::PartSaddle][CustomTypes::AttributeSaddleMounting])));
+        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]++;
+        break;
+    case CustomTypes::PartTire:
+        setAttribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth,
+                                                  list->at(m_map_column_index[CustomTypes::PartTire][CustomTypes::AttributeTireWidth])));
+        m_map_attribute_counter[CustomTypes::AttributeTireWidth]++;
+        setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
+                                              list->at(m_map_column_index[CustomTypes::PartTire][CustomTypes::AttributeWheelSize])));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
+        break;
+    case CustomTypes::PartInnerTube:
         break;
     }
 }
@@ -322,6 +385,30 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
             setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSaddleMounting] <= 0)
+            setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
+        break;
+    }
+    case CustomTypes::PartSaddle:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSaddleMounting] <= 0)
+            setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
+        break;
+    }
+    case CustomTypes::PartTire:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeTireWidth]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeTireWidth] <= 0)
+            setAttribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
+            setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+        break;
+    }
+    case CustomTypes::PartInnerTube:
+    {
         break;
     }
     }
@@ -457,6 +544,33 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_seatpost_diameter().second != "-1"){
             filter_properties_list << QString("seatpost_diameter = '%1'").arg(attribute_seatpost_diameter().second);
         }
+        if (attribute_saddle_mounting().second != "-1"){
+            filter_properties_list << QString("saddle_mounting = '%1'").arg(attribute_saddle_mounting().second);
+        }
+        break;
+    }
+    case CustomTypes::PartSaddle:
+    {
+        if (attribute_saddle_mounting().second != "-1"){
+            filter_properties_list << QString("saddle_mounting = '%1'").arg(attribute_saddle_mounting().second);
+        }
+        break;
+    }
+    case CustomTypes::PartTire:
+    {
+        if (attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(attribute_wheel_size().second);
+        }
+        break;
+    }
+    case CustomTypes::PartInnerTube:
+    {
+        if (attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(attribute_wheel_size().second);
+        }
+        if (attribute_tire_width().second != "-1"){
+            filter_properties_list << QString("min_tire_width <= '%1' AND max_tire_width >= '%1'").arg(attribute_tire_width().second);
+        }
         break;
     }
     }
@@ -535,6 +649,24 @@ void ModelHandler::setAttribute_seatpost_diameter(ModelHandler::PartAttribute at
 
     m_attribute_seatpost_diameter = attribute_seatpost_diameter;
     emit attribute_seatpost_diameterChanged(m_attribute_seatpost_diameter);
+}
+
+void ModelHandler::setAttribute_saddle_mounting(ModelHandler::PartAttribute attribute_saddle_mounting)
+{
+    if (m_attribute_saddle_mounting == attribute_saddle_mounting)
+        return;
+
+    m_attribute_saddle_mounting = attribute_saddle_mounting;
+    emit attribute_saddle_mountingChanged(m_attribute_saddle_mounting);
+}
+
+void ModelHandler::setAttribute_tire_width(ModelHandler::PartAttribute attribute_tire_width)
+{
+    if (m_attribute_tire_width == attribute_tire_width)
+        return;
+
+    m_attribute_tire_width = attribute_tire_width;
+    emit attribute_tire_widthChanged(m_attribute_tire_width);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)

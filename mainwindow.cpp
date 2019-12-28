@@ -5,9 +5,11 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
+    , inner_tube_row(10)
 {
     ui->setupUi(this);
     connect(this, &MainWindow::part_changed, this, &MainWindow::prepare_delete_button);
+    connect(this, &MainWindow::part_changed, this, &MainWindow::set_inner_tube_button_available);
 }
 
 MainWindow::~MainWindow()
@@ -15,12 +17,14 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::add_select_button(int row_index)
+QPushButton* MainWindow::add_select_button(int row_index)
 {
     QPushButton* select_button = new QPushButton("Wybierz");
     select_button->setProperty("part_type",m_selected_parts_model->data(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType)).toInt());
     ui->selected_parts_tableview->setIndexWidget(m_selected_parts_model->index(row_index, TableProperties::SelectedParts::ColumnPartType), select_button);
     connect(select_button, &QPushButton::clicked, this, &MainWindow::select_part_button_clicked);
+
+    return select_button;
 }
 
 void MainWindow::add_delete_button(int row_index)
@@ -59,6 +63,15 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartSeatpost:
         m_model_seatpost = model;
         break;
+    case CustomTypes::PartSaddle:
+        m_model_saddle = model;
+        break;
+    case CustomTypes::PartTire:
+        m_model_tire = model;
+        break;
+    case CustomTypes::PartInnerTube:
+        m_model_inner_tube = model;
+        break;
     }
 }
 
@@ -68,10 +81,15 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
     ui->selected_parts_tableview->setModel(m_selected_parts_model);
 
     for (int i = 0; i < m_selected_parts_model->rowCount(); ++i){
-        add_select_button(i);
-        ui->selected_parts_tableview->setColumnWidth(1, 400);
-        ui->selected_parts_tableview->hideColumn(3);
+        if (i == CustomTypes::PartInnerTube){
+            inner_tube_button = add_select_button(i);
+            inner_tube_button->setEnabled(false);
+        } else {
+            add_select_button(i);
+        }
     }
+    ui->selected_parts_tableview->setColumnWidth(1, 400);
+    ui->selected_parts_tableview->hideColumn(3);
 }
 
 void MainWindow::select_part_button_clicked()
@@ -103,6 +121,15 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartSeatpost:
         ui->part_tableview->setModel(m_model_seatpost);
         break;
+    case CustomTypes::PartSaddle:
+        ui->part_tableview->setModel(m_model_saddle);
+        break;
+    case CustomTypes::PartTire:
+        ui->part_tableview->setModel(m_model_tire);
+        break;
+    case CustomTypes::PartInnerTube:
+        ui->part_tableview->setModel(m_model_inner_tube);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
@@ -120,6 +147,11 @@ void MainWindow::delete_part_button_clicked()
         }
     }
     emit part_has_to_be_remove(part_type);
+    if(part_type == CustomTypes::PartTire){
+        emit part_has_to_be_remove(CustomTypes::PartInnerTube);
+        inner_tube_button = add_select_button(inner_tube_row);
+        inner_tube_button->setEnabled(false);
+    }
 }
 
 void MainWindow::on_accept_pushbutton_clicked()
@@ -147,4 +179,10 @@ void MainWindow::prepare_delete_button(CustomTypes::PartType part_type, QList<QS
 void MainWindow::on_back_pushbutton_clicked()
 {
     ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::set_inner_tube_button_available(CustomTypes::PartType part_type, QList<QString> *)
+{
+    if (part_type == CustomTypes::PartTire)
+        inner_tube_button->setEnabled(true);
 }

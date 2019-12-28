@@ -22,7 +22,9 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_headset READ attribute_headset WRITE setAttribute_headset NOTIFY attribute_headsetChanged);
     Q_PROPERTY(PartAttribute attribute_handlebar_diameter READ attribute_handlebar_diameter WRITE setAttribute_handlebar_diameter NOTIFY attribute_handlebar_diameterChanged);
     Q_PROPERTY(PartAttribute attribute_stem_steerer_tube_diameter READ attribute_stem_steerer_tube_diameter WRITE setAttribute_stem_steerer_tube_diameter NOTIFY attribute_stem_steerer_tube_diameterChanged);
-    Q_PROPERTY(PartAttribute attribute_seatpost_diameter READ attribute_seatpost_diameter WRITE setAttribute_seatpost_diameter NOTIFY attribute_seatpost_diameterChanged)
+    Q_PROPERTY(PartAttribute attribute_seatpost_diameter READ attribute_seatpost_diameter WRITE setAttribute_seatpost_diameter NOTIFY attribute_seatpost_diameterChanged);
+    Q_PROPERTY(PartAttribute attribute_saddle_mounting READ attribute_saddle_mounting WRITE setAttribute_saddle_mounting NOTIFY attribute_saddle_mountingChanged);
+    Q_PROPERTY(PartAttribute attribute_tire_width READ attribute_tire_width WRITE setAttribute_tire_width NOTIFY attribute_tire_widthChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -35,6 +37,8 @@ public:
     PartAttribute attribute_handlebar_diameter() const;
     PartAttribute attribute_stem_steerer_tube_diameter() const;
     PartAttribute attribute_seatpost_diameter() const;
+    PartAttribute attribute_saddle_mounting() const;
+    PartAttribute attribute_tire_width() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -50,6 +54,9 @@ private:
     QSqlTableModel* m_model_handlebar;
     QSqlTableModel* m_model_stem;
     QSqlTableModel* m_model_seatpost;
+    QSqlTableModel* m_model_saddle;
+    QSqlTableModel* m_model_tire;
+    QSqlTableModel* m_model_inner_tube;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -63,6 +70,8 @@ private:
     PartAttribute m_attribute_handlebar_diameter;
     PartAttribute m_attribute_stem_steerer_tube_diameter;
     PartAttribute m_attribute_seatpost_diameter;
+    PartAttribute m_attribute_saddle_mounting;
+    PartAttribute m_attribute_tire_width;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -77,6 +86,8 @@ signals:
     void attribute_handlebar_diameterChanged(PartAttribute attribute_handlebar_diameter);
     void attribute_stem_steerer_tube_diameterChanged(PartAttribute attribute_stem_steerer_tube_diameter);
     void attribute_seatpost_diameterChanged(PartAttribute attribute_seatpost_diameter);
+    void attribute_saddle_mountingChanged(PartAttribute attribute_saddle_mounting);
+    void attribute_tire_widthChanged(PartAttribute attribute_tire_width);
 
 public slots:
     void init();
@@ -95,6 +106,8 @@ public slots:
     void setAttribute_handlebar_diameter(PartAttribute attribute_handlebar_diameter);
     void setAttribute_stem_steerer_tube_diameter(PartAttribute attribute_stem_steerer_tube_diameter);
     void setAttribute_seatpost_diameter(PartAttribute attribute_seatpost_diameter);
+    void setAttribute_saddle_mounting(PartAttribute attribute_saddle_mounting);
+    void setAttribute_tire_width(PartAttribute attribute_tire_width);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);

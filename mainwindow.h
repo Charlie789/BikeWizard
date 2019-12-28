@@ -5,6 +5,7 @@
 #include <QSqlTableModel>
 #include "customtypes.h"
 #include <QStandardItemModel>
+#include <QPushButton>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -28,10 +29,16 @@ private:
     QSqlTableModel* m_model_handlebar;
     QSqlTableModel* m_model_stem;
     QSqlTableModel* m_model_seatpost;
+    QSqlTableModel* m_model_saddle;
+    QSqlTableModel* m_model_tire;
+    QSqlTableModel* m_model_inner_tube;
 
     QStandardItemModel* m_selected_parts_model;
 
-    void add_select_button(int row_index);
+    int inner_tube_row;
+    QPushButton* inner_tube_button;
+
+    QPushButton* add_select_button(int row_index);
     void add_delete_button(int row_index);
 
 public slots:
@@ -44,6 +51,7 @@ private slots:
     void on_accept_pushbutton_clicked();
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
     void on_back_pushbutton_clicked();
+    void set_inner_tube_button_available(CustomTypes::PartType part_type, QList<QString>*);
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);

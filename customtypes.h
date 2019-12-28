@@ -12,7 +12,10 @@ namespace CustomTypes {
         PartHeadset,
         PartHandlebar,
         PartStem,
-        PartSeatpost
+        PartSeatpost,
+        PartSaddle,
+        PartTire,
+        PartInnerTube
     };
 
     enum AttributeName {
@@ -23,7 +26,9 @@ namespace CustomTypes {
         AttributeHeadset,
         AttributeHandlebarDiameter,
         AttributeStemSteererTubeDiameter,
-        AttributeSeatpostDiameter
+        AttributeSeatpostDiameter,
+        AttributeSaddleMounting,
+        AttributeTireWidth
     };
 
 }
