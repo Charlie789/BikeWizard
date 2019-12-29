@@ -1078,6 +1078,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_front_disc_mount().second != "-1"){
             filter_properties_list << QString("disc_mount_system = '%1'").arg(attribute_front_disc_mount().second);
         }
+        if (attribute_rear_disc_brake_mount().second != "-1"){
+            filter_properties_list << QString("disc_mount_system IS NOT NULL");
+        }
         break;
     }
     case CustomTypes::PartRearWheel:
@@ -1090,6 +1093,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         if (attribute_rear_disc_mount().second != "-1"){
             filter_properties_list << QString("disc_mount_system = '%1'").arg(attribute_rear_disc_mount().second);
+        }
+        if (attribute_rear_disc_brake_mount().second != "-1"){
+            filter_properties_list << QString("disc_mount_system IS NOT NULL");
         }
         break;
     }
