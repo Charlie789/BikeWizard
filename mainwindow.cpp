@@ -274,19 +274,24 @@ void MainWindow::set_button_available(CustomTypes::PartType part_type)
 {
     switch (part_type){
     case CustomTypes::PartInnerTube:
-        inner_tube_button->setEnabled(true);
+        if(inner_tube_button)
+            inner_tube_button->setEnabled(true);
         break;
     case CustomTypes::PartFrontDisc:
-        front_disc_button->setEnabled(true);
+        if(front_disc_button)
+            front_disc_button->setEnabled(true);
         break;
     case CustomTypes::PartRearDisc:
-        rear_disc_button->setEnabled(true);
+        if(rear_disc_button)
+            rear_disc_button->setEnabled(true);
         break;
     case CustomTypes::PartFrontDiscBrakeSet:
-        front_disc_brake_set_button->setEnabled(true);
+        if(front_disc_brake_set_button)
+            front_disc_brake_set_button->setEnabled(true);
         break;
     case CustomTypes::PartRearDiscBrakeSet:
-        rear_disc_brake_set_button->setEnabled(true);
+        if(rear_disc_brake_set_button)
+            rear_disc_brake_set_button->setEnabled(true);
         break;
     default:
         break;
@@ -297,19 +302,24 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
 {
     switch (part_type){
     case CustomTypes::PartInnerTube:
-        inner_tube_button->setEnabled(false);
+        if(inner_tube_button)
+            inner_tube_button->setEnabled(false);
         break;
     case CustomTypes::PartFrontDisc:
-        front_disc_button->setEnabled(false);
+        if(front_disc_button)
+            front_disc_button->setEnabled(false);
         break;
     case CustomTypes::PartRearDisc:
-        rear_disc_button->setEnabled(false);
+        if(rear_disc_button)
+            rear_disc_button->setEnabled(false);
         break;
     case CustomTypes::PartFrontDiscBrakeSet:
-        front_disc_brake_set_button->setEnabled(false);
+        if(front_disc_brake_set_button)
+            front_disc_brake_set_button->setEnabled(false);
         break;
     case CustomTypes::PartRearDiscBrakeSet:
-        rear_disc_brake_set_button->setEnabled(false);
+        if(rear_disc_brake_set_button)
+            rear_disc_brake_set_button->setEnabled(false);
         break;
     default:
         break;

@@ -6,6 +6,7 @@
 #include "customtypes.h"
 #include <QStandardItemModel>
 #include <QPushButton>
+#include <QPointer>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -49,11 +50,11 @@ private:
     QStandardItemModel* m_selected_parts_model;
 
     int inner_tube_row;
-    QPushButton* inner_tube_button;
-    QPushButton* front_disc_button;
-    QPushButton* rear_disc_button;
-    QPushButton* front_disc_brake_set_button;
-    QPushButton* rear_disc_brake_set_button;
+    QPointer<QPushButton> inner_tube_button;
+    QPointer<QPushButton> front_disc_button;
+    QPointer<QPushButton> rear_disc_button;
+    QPointer<QPushButton> front_disc_brake_set_button;
+    QPointer<QPushButton> rear_disc_brake_set_button;
 
     QPushButton* add_select_button(int row_index);
     void add_delete_button(int row_index);
