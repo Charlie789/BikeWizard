@@ -22,7 +22,9 @@ namespace CustomTypes {
         PartChain,
         PartRearDerailleur,
         PartFrontDerailleur,
-        PartCrank
+        PartCrank,
+        PartFrontShifter,
+        PartRearShifter
     };
 
     enum AttributeName {

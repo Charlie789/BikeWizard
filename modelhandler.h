@@ -92,6 +92,8 @@ private:
     QSqlTableModel* m_model_rear_derailleur;
     QSqlTableModel* m_model_front_derailleur;
     QSqlTableModel* m_model_crank;
+    QSqlTableModel* m_model_front_shifter;
+    QSqlTableModel* m_model_rear_shifter;
 
     QStandardItemModel m_model_selected_parts;
 

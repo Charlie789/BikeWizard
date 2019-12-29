@@ -199,6 +199,8 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_rear_derailleur->setFilter(create_filter(CustomTypes::PartRearDerailleur));
     m_model_front_derailleur->setFilter(create_filter(CustomTypes::PartFrontDerailleur));
     m_model_crank->setFilter(create_filter(CustomTypes::PartCrank));
+    m_model_front_shifter->setFilter(create_filter(CustomTypes::PartFrontShifter));
+    m_model_rear_shifter->setFilter(create_filter(CustomTypes::PartRearShifter));
 }
 
 void ModelHandler::init()
@@ -319,6 +321,16 @@ void ModelHandler::init()
     m_map_column_index.insert(CustomTypes::PartCrank, m_map_part_column_index);
     m_map_part_column_index.clear();
 
+    m_map_part_table.insert(CustomTypes::PartFrontShifter, "front_shifter_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeCrankSpeed, 3);
+    m_map_column_index.insert(CustomTypes::PartFrontShifter, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
+    m_map_part_table.insert(CustomTypes::PartRearShifter, "rear_shifter_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeChainSpeed, 3);
+    m_map_column_index.insert(CustomTypes::PartRearShifter, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
@@ -402,6 +414,12 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartCrank:
         m_model_crank = model;
+        break;
+    case CustomTypes::PartFrontShifter:
+        m_model_front_shifter = model;
+        break;
+    case CustomTypes::PartRearShifter:
+        m_model_rear_shifter = model;
         break;
     }
 }
@@ -573,6 +591,16 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType,
                                                   list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeBBAxisType])));
         m_map_attribute_counter[CustomTypes::AttributeBBAxisType]++;
+        break;
+    case CustomTypes::PartFrontShifter:
+        setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontShifter][CustomTypes::AttributeCrankSpeed])));
+        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]++;
+        break;
+    case CustomTypes::PartRearShifter:
+        setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
+                                                  list->at(m_map_column_index[CustomTypes::PartRearShifter][CustomTypes::AttributeChainSpeed])));
+        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
         break;
     }
 }
@@ -779,6 +807,20 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeBBAxisType]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBAxisType] <= 0)
             setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
+        break;
+    }
+    case CustomTypes::PartFrontShifter:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeCrankSpeed] <= 0)
+            setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
+        break;
+    }
+    case CustomTypes::PartRearShifter:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
+            setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         break;
     }
     }
@@ -1037,6 +1079,20 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         if (attribute_min_front_derailleur_tooth().second != "-1"){
             filter_properties_list << QString("max_chainring_tooth >= '%1'").arg(attribute_min_front_derailleur_tooth().second);
+        }
+        break;
+    }
+    case CustomTypes::PartFrontShifter:
+    {
+        if (attribute_crank_speed().second != "-1"){
+            filter_properties_list << QString("crank_speed = '%1'").arg(attribute_crank_speed().second);
+        }
+        break;
+    }
+    case CustomTypes::PartRearShifter:
+    {
+        if (attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(attribute_chain_speed().second);
         }
         break;
     }
