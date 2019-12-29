@@ -82,6 +82,8 @@ ModelHandler::ModelHandler(QObject *parent) :
 
     connect(this, &ModelHandler::attribute_front_disc_mountChanged, this, &ModelHandler::check_disc_allowed);
     connect(this, &ModelHandler::attribute_rear_disc_mountChanged, this, &ModelHandler::check_disc_allowed);
+    connect(this, &ModelHandler::attribute_front_disc_brake_mountChanged, this, &ModelHandler::check_disc_allowed);
+    connect(this, &ModelHandler::attribute_rear_disc_brake_mountChanged, this, &ModelHandler::check_disc_allowed);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -1378,14 +1380,14 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
     }
     case CustomTypes::PartFrontDiscBrakeSet:
     {
-        if (attribute_front_disc_brake_mount().second != "-1" && !attribute_front_disc_mount().second.isEmpty()){
+        if (attribute_front_disc_brake_mount().second != "-1" && !attribute_front_disc_brake_mount().second.isEmpty()){
             filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(attribute_front_disc_brake_mount().second);
         }
         break;
     }
     case CustomTypes::PartRearDiscBrakeSet:
     {
-        if (attribute_rear_disc_brake_mount().second != "-1"){
+        if (attribute_rear_disc_brake_mount().second != "-1" && !attribute_rear_disc_brake_mount().second.isEmpty()){
             filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(attribute_rear_disc_brake_mount().second);
         }
         break;
@@ -1721,6 +1723,7 @@ void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString
 void ModelHandler::check_disc_allowed(ModelHandler::PartAttribute part_attribute)
 {
     switch (part_attribute.first) {
+    case CustomTypes::AttributeFrontDiscBrakeMount:
     case CustomTypes::AttributeFrontDiscMount:
         if (part_attribute.second.isEmpty()){
             emit block_part(CustomTypes::PartFrontDisc);
@@ -1730,6 +1733,7 @@ void ModelHandler::check_disc_allowed(ModelHandler::PartAttribute part_attribute
             emit unlock_part(CustomTypes::PartFrontDiscBrakeSet);
         }
         break;
+    case CustomTypes::AttributeRearDiscBrakeMount:
     case CustomTypes::AttributeRearDiscMount:
         if (part_attribute.second.isEmpty()){
             emit block_part(CustomTypes::PartRearDisc);
