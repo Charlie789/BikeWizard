@@ -59,7 +59,11 @@ namespace CustomTypes {
         AttributeFrontDiscMount,
         AttributeRearDiscMount,
         AttributeFrontDiscBrakeMount,
-        AttributeRearDiscBrakeMount
+        AttributeRearDiscBrakeMount,
+        AttributeFrontVBrakeMount,
+        AttributeRearVBrakeMount,
+        AttributeSelectedFrontBrake,
+        AttributeSelectedRearBrake
     };
 
 }

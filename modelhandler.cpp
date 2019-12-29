@@ -34,7 +34,12 @@ ModelHandler::ModelHandler(QObject *parent) :
     m_attribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount, "-1")),
     m_attribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1")),
     m_attribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1")),
-    m_attribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"))
+    m_attribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1")),
+    m_attribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1")),
+    m_attribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1")),
+
+    m_selected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake,"-1")),
+    m_selected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake,"-1"))
 
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
@@ -69,6 +74,11 @@ ModelHandler::ModelHandler(QObject *parent) :
     connect(this, &ModelHandler::attribute_rear_disc_mountChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_front_disc_brake_mountChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_rear_disc_brake_mountChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_front_vbrake_mountChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_rear_vbrake_mountChanged, this, &ModelHandler::filter_handler);
+
+    connect(this, &ModelHandler::selected_front_brakeChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::selected_rear_brakeChanged, this, &ModelHandler::filter_handler);
 
     connect(this, &ModelHandler::attribute_front_disc_mountChanged, this, &ModelHandler::check_disc_allowed);
     connect(this, &ModelHandler::attribute_rear_disc_mountChanged, this, &ModelHandler::check_disc_allowed);
@@ -224,6 +234,26 @@ ModelHandler::PartAttribute ModelHandler::attribute_rear_disc_brake_mount() cons
     return m_attribute_rear_disc_brake_mount;
 }
 
+ModelHandler::PartAttribute ModelHandler::attribute_front_vbrake_mount() const
+{
+    return m_attribute_front_vbrake_mount;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_rear_vbrake_mount() const
+{
+    return m_attribute_rear_vbrake_mount;
+}
+
+ModelHandler::PartAttribute ModelHandler::selected_rear_brake() const
+{
+    return m_selected_rear_brake;
+}
+
+ModelHandler::PartAttribute ModelHandler::selected_front_brake() const
+{
+    return m_selected_front_brake;
+}
+
 void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
     m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
@@ -263,6 +293,8 @@ void ModelHandler::init()
     m_map_part_column_index.insert(CustomTypes::AttributeSeatpostDiameter, 6);
     m_map_part_column_index.insert(CustomTypes::AttributeBBType, 7);
     m_map_part_column_index.insert(CustomTypes::AttributeFrontDerailleurMount, 8);
+    m_map_part_column_index.insert(CustomTypes::AttributeRearVBrakeMount, 9);
+    m_map_part_column_index.insert(CustomTypes::AttributeRearDiscBrakeMount, 10);
     m_map_column_index.insert(CustomTypes::PartFrame, m_map_part_column_index);
     m_map_part_column_index.clear();
 
@@ -270,6 +302,8 @@ void ModelHandler::init()
     m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
     m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeFront, 4);
     m_map_part_column_index.insert(CustomTypes::AttributeSteererTubeDiameter, 5);
+    m_map_part_column_index.insert(CustomTypes::AttributeFrontVBrakeMount, 6);
+    m_map_part_column_index.insert(CustomTypes::AttributeFrontDiscBrakeMount, 7);
     m_map_column_index.insert(CustomTypes::PartFork, m_map_part_column_index);
     m_map_part_column_index.clear();
 
@@ -284,6 +318,7 @@ void ModelHandler::init()
     m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 3);
     m_map_part_column_index.insert(CustomTypes::AttributeAxleTypeRear, 4);
     m_map_part_column_index.insert(CustomTypes::AttributeRearDiscMount, 5);
+    m_map_part_column_index.insert(CustomTypes::AttributeRearVBrakeMount, 6);
     m_map_column_index.insert(CustomTypes::PartRearWheel, m_map_part_column_index);
     m_map_part_column_index.clear();
 
@@ -433,6 +468,8 @@ void ModelHandler::init()
     m_map_attribute_counter.insert(CustomTypes::AttributeRearDiscMount, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeFrontDiscBrakeMount, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeRearDiscBrakeMount, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeFrontVBrakeMount, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeRearVBrakeMount, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -528,6 +565,12 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter,
                                                    list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeSteererTubeDiameter])));
         m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter]++;
+        setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeFrontVBrakeMount])));
+        m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]++;
+        setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeFrontDiscBrakeMount])));
+        m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]++;
         break;
     case CustomTypes::PartFrame:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
@@ -548,6 +591,12 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount,
                                                   list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeFrontDerailleurMount])));
         m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]++;
+        setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeRearVBrakeMount])));
+        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]++;
+        setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeRearDiscBrakeMount])));
+        m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]++;
         break;
     case CustomTypes::PartFrontWheel:
         setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
@@ -570,6 +619,9 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount,
                                                   list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeRearDiscMount])));
         m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]++;
+        setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeRearVBrakeMount])));
+        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]++;
         break;
     case CustomTypes::PartHeadset:
         setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset,
@@ -719,11 +771,13 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount,
                                                   list->at(m_map_column_index[CustomTypes::PartFrontDiscBrakeSet][CustomTypes::AttributeFrontDiscBrakeMount])));
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]++;
+        setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "disc"));
         break;
     case CustomTypes::PartRearDiscBrakeSet:
         setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount,
                                                   list->at(m_map_column_index[CustomTypes::PartRearDiscBrakeSet][CustomTypes::AttributeRearDiscBrakeMount])));
         m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]++;
+        setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "disc"));
         break;
     }
 }
@@ -742,6 +796,12 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter] <= 0)
             setAttribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount] <= 0)
+            setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount] <= 0)
+            setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartFrame:
@@ -764,6 +824,12 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount] <= 0)
             setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount] <= 0)
+            setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount] <= 0)
+            setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -790,6 +856,9 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscMount] <= 0)
             setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount] <= 0)
+            setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartHeadset:
@@ -977,6 +1046,7 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount] <= 0)
             setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
+        setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
         break;
     }
     case CustomTypes::PartRearDiscBrakeSet:
@@ -984,6 +1054,7 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount] <= 0)
             setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
+        setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
         break;
     }
     }
@@ -1037,6 +1108,14 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_stem_steerer_tube_diameter().second != "-1"){
             filter_properties_list << QString("steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1')").arg(attribute_stem_steerer_tube_diameter().second);
         }
+        if (attribute_front_disc_brake_mount().second != "-1"){
+            filter_properties_list << QString("disc_brake_mount = '%1'").arg(attribute_front_disc_brake_mount().second);
+        }
+        if (selected_front_brake().second == "disc"){
+            filter_properties_list << QString("disc_brake_mount IS NOT NULL");
+        } else if (selected_front_brake().second == "vbrake") {
+            filter_properties_list << QString("v_brake_mount IS NOT NULL");
+        }
         break;
     }
     case CustomTypes::PartFrame:
@@ -1065,6 +1144,12 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_front_derailleur_mount().second != "-1"){
             filter_properties_list << QString("front_derailleur_mount = '%1'").arg(attribute_front_derailleur_mount().second);
         }
+
+        if (selected_rear_brake().second == "disc"){
+            filter_properties_list << QString("disc_brake_mount IS NOT NULL");
+        } else if (selected_rear_brake().second == "vbrake") {
+            filter_properties_list << QString("v_brake_mount IS NOT NULL");
+        }
         break;
     }
     case CustomTypes::PartFrontWheel:
@@ -1078,7 +1163,7 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_front_disc_mount().second != "-1"){
             filter_properties_list << QString("disc_mount_system = '%1'").arg(attribute_front_disc_mount().second);
         }
-        if (attribute_rear_disc_brake_mount().second != "-1"){
+        if (selected_rear_brake().second == "disc"){
             filter_properties_list << QString("disc_mount_system IS NOT NULL");
         }
         break;
@@ -1094,7 +1179,7 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_rear_disc_mount().second != "-1"){
             filter_properties_list << QString("disc_mount_system = '%1'").arg(attribute_rear_disc_mount().second);
         }
-        if (attribute_rear_disc_brake_mount().second != "-1"){
+        if (selected_rear_brake().second == "disc"){
             filter_properties_list << QString("disc_mount_system IS NOT NULL");
         }
         break;
@@ -1579,6 +1664,42 @@ void ModelHandler::setAttribute_rear_disc_brake_mount(ModelHandler::PartAttribut
 
     m_attribute_rear_disc_brake_mount = attribute_rear_disc_brake_mount;
     emit attribute_rear_disc_brake_mountChanged(m_attribute_rear_disc_brake_mount);
+}
+
+void ModelHandler::setAttribute_front_vbrake_mount(ModelHandler::PartAttribute attribute_front_vbrake_mount)
+{
+    if (m_attribute_front_vbrake_mount == attribute_front_vbrake_mount)
+        return;
+
+    m_attribute_front_vbrake_mount = attribute_front_vbrake_mount;
+    emit attribute_front_vbrake_mountChanged(m_attribute_front_vbrake_mount);
+}
+
+void ModelHandler::setAttribute_rear_vbrake_mount(ModelHandler::PartAttribute attribute_rear_vbrake_mount)
+{
+    if (m_attribute_rear_vbrake_mount == attribute_rear_vbrake_mount)
+        return;
+
+    m_attribute_rear_vbrake_mount = attribute_rear_vbrake_mount;
+    emit attribute_rear_vbrake_mountChanged(m_attribute_rear_vbrake_mount);
+}
+
+void ModelHandler::setSelected_front_brake(ModelHandler::PartAttribute selected_front_brake)
+{
+    if (m_selected_front_brake == selected_front_brake)
+        return;
+
+    m_selected_front_brake = selected_front_brake;
+    emit selected_front_brakeChanged(m_selected_front_brake);
+}
+
+void ModelHandler::setSelected_rear_brake(PartAttribute selected_brake)
+{
+    if (m_selected_rear_brake == selected_brake)
+        return;
+
+    m_selected_rear_brake = selected_brake;
+    emit selected_rear_brakeChanged(m_selected_rear_brake);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)

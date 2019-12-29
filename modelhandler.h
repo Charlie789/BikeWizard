@@ -45,6 +45,11 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_rear_disc_mount READ attribute_rear_disc_mount WRITE setAttribute_rear_disc_mount NOTIFY attribute_rear_disc_mountChanged);
     Q_PROPERTY(PartAttribute attribute_front_disc_brake_mount READ attribute_front_disc_brake_mount WRITE setAttribute_front_disc_brake_mount NOTIFY attribute_front_disc_brake_mountChanged);
     Q_PROPERTY(PartAttribute attribute_rear_disc_brake_mount READ attribute_rear_disc_brake_mount WRITE setAttribute_rear_disc_brake_mount NOTIFY attribute_rear_disc_brake_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_front_vbrake_mount READ attribute_front_vbrake_mount WRITE setAttribute_front_vbrake_mount NOTIFY attribute_front_vbrake_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_rear_vbrake_mount READ attribute_rear_vbrake_mount WRITE setAttribute_rear_vbrake_mount NOTIFY attribute_rear_vbrake_mountChanged);
+
+    Q_PROPERTY(PartAttribute selected_front_brake READ selected_front_brake WRITE setSelected_front_brake NOTIFY selected_front_brakeChanged);
+    Q_PROPERTY(PartAttribute selected_rear_brake READ selected_rear_brake WRITE setSelected_rear_brake NOTIFY selected_rear_brakeChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -79,6 +84,11 @@ public:
     PartAttribute attribute_rear_disc_mount() const;
     PartAttribute attribute_front_disc_brake_mount() const;
     PartAttribute attribute_rear_disc_brake_mount() const;
+    PartAttribute attribute_front_vbrake_mount() const;
+    PartAttribute attribute_rear_vbrake_mount() const;
+
+    PartAttribute selected_front_brake() const;
+    PartAttribute selected_rear_brake() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -145,6 +155,11 @@ private:
     PartAttribute m_attribute_rear_disc_mount;
     PartAttribute m_attribute_front_disc_brake_mount;
     PartAttribute m_attribute_rear_disc_brake_mount;
+    PartAttribute m_attribute_front_vbrake_mount;
+    PartAttribute m_attribute_rear_vbrake_mount;
+
+    PartAttribute m_selected_front_brake;
+    PartAttribute m_selected_rear_brake;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -183,6 +198,12 @@ signals:
     void attribute_rear_disc_mountChanged(PartAttribute attribute_rear_disc_mount);
     void attribute_front_disc_brake_mountChanged(PartAttribute attribute_front_disc_brake_mount);
     void attribute_rear_disc_brake_mountChanged(PartAttribute attribute_rear_disc_brake_mount);
+    void attribute_front_vbrake_mountChanged(PartAttribute attribute_front_vbrake_mount);
+    void attribute_rear_vbrake_mountChanged(PartAttribute attribute_rear_vbrake_mount);
+
+    void selected_rear_brakeChanged(PartAttribute selected_rear_brake);
+
+    void selected_front_brakeChanged(PartAttribute selected_front_brake);
 
 public slots:
     void init();
@@ -223,6 +244,11 @@ public slots:
     void setAttribute_rear_disc_mount(PartAttribute attribute_rear_disc_mount);
     void setAttribute_front_disc_brake_mount(PartAttribute attribute_front_disc_brake_mount);
     void setAttribute_rear_disc_brake_mount(PartAttribute attribute_rear_disc_brake_mount);
+    void setAttribute_front_vbrake_mount(PartAttribute attribute_front_vbrake_mount);
+    void setAttribute_rear_vbrake_mount(PartAttribute attribute_rear_vbrake_mount);
+
+    void setSelected_front_brake(PartAttribute selected_front_brake);
+    void setSelected_rear_brake(PartAttribute selected_rear_brake);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
