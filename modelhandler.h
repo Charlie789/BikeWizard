@@ -38,6 +38,7 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_chain_line READ attribute_chain_line WRITE setAttribute_chain_line NOTIFY attribute_chain_lineChanged);
     Q_PROPERTY(PartAttribute attribute_crank_speed READ attribute_crank_speed WRITE setAttribute_crank_speed NOTIFY attribute_crank_speedChanged);
     Q_PROPERTY(PartAttribute attribute_front_derailleur_mount READ attribute_front_derailleur_mount WRITE setAttribute_front_derailleur_mount NOTIFY attribute_front_derailleur_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_max_crank_tooth READ attribute_max_crank_tooth WRITE setAttribute_max_crank_tooth NOTIFY attribute_max_crank_toothChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -65,6 +66,7 @@ public:
     PartAttribute attribute_chain_line() const;
     PartAttribute attribute_crank_speed() const;
     PartAttribute attribute_front_derailleur_mount() const;
+    PartAttribute attribute_max_crank_tooth() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -89,6 +91,7 @@ private:
     QSqlTableModel* m_model_chain;
     QSqlTableModel* m_model_rear_derailleur;
     QSqlTableModel* m_model_front_derailleur;
+    QSqlTableModel* m_model_crank;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -117,6 +120,7 @@ private:
     PartAttribute m_attribute_chain_line;
     PartAttribute m_attribute_crank_speed;
     PartAttribute m_attribute_front_derailleur_mount;
+    PartAttribute m_attribute_max_crank_tooth;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -146,6 +150,7 @@ signals:
     void attribute_chain_lineChanged(PartAttribute attribute_chain_line);
     void attribute_crank_speedChanged(PartAttribute attribute_crank_speed);
     void attribute_front_derailleur_mountChanged(PartAttribute attribute_front_derailleur_mount);
+    void attribute_max_crank_toothChanged(PartAttribute attribute_max_crank_tooth);
 
 public slots:
     void init();
@@ -179,6 +184,7 @@ public slots:
     void setAttribute_chain_line(PartAttribute attribute_chain_line);
     void setAttribute_crank_speed(PartAttribute attribute_crank_speed);
     void setAttribute_front_derailleur_mount(PartAttribute attribute_front_derailleur_mount);
+    void setAttribute_max_crank_tooth(PartAttribute attribute_max_crank_tooth);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
