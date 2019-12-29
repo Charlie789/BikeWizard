@@ -20,7 +20,8 @@ namespace CustomTypes {
         PartGrip,
         PartCassette,
         PartChain,
-        PartRearDerailleur
+        PartRearDerailleur,
+        PartFrontDerailleur
     };
 
     enum AttributeName {
@@ -41,7 +42,12 @@ namespace CustomTypes {
         AttributeMinSprocketTooth,
         AttributeMaxSprocketTooth,
         AttributeMinDerailleurTooth,
-        AttributeMaxDerailleurTooth
+        AttributeMaxDerailleurTooth,
+        AttributeMaxFrontDerailleurTooth,
+        AttributeMinFrontDerailleurTooth,
+        AttributeChainLine,
+        AttributeCrankSpeed,
+        AttributeFrontDerailleurMount
     };
 
 }

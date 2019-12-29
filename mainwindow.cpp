@@ -87,6 +87,9 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearDerailleur:
         m_model_rear_derailleur = model;
         break;
+    case CustomTypes::PartFrontDerailleur:
+        m_model_front_derailleur = model;
+        break;
     }
 }
 
@@ -159,6 +162,9 @@ void MainWindow::select_part_button_clicked()
         break;
     case CustomTypes::PartRearDerailleur:
         ui->part_tableview->setModel(m_model_rear_derailleur);
+        break;
+    case CustomTypes::PartFrontDerailleur:
+        ui->part_tableview->setModel(m_model_front_derailleur);
         break;
     }
     ui->part_tableview->hideColumn(2);

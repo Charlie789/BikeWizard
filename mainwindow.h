@@ -37,6 +37,7 @@ private:
     QSqlTableModel* m_model_cassette;
     QSqlTableModel* m_model_chain;
     QSqlTableModel* m_model_rear_derailleur;
+    QSqlTableModel* m_model_front_derailleur;
 
     QStandardItemModel* m_selected_parts_model;
 

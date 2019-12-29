@@ -33,6 +33,11 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_max_sprocket_tooth READ attribute_max_sprocket_tooth WRITE setAttribute_max_sprocket_tooth NOTIFY attribute_max_sprocket_toothChanged);
     Q_PROPERTY(PartAttribute attribute_min_derailleur_tooth READ attribute_min_derailleur_tooth WRITE setAttribute_min_derailleur_tooth NOTIFY attribute_min_derailleur_toothChanged);
     Q_PROPERTY(PartAttribute attribute_max_derailleur_tooth READ attribute_max_derailleur_tooth WRITE setAttribute_max_derailleur_tooth NOTIFY attribute_max_derailleur_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_max_front_derailleur_tooth READ attribute_max_front_derailleur_tooth WRITE setAttribute_max_front_derailleur_tooth NOTIFY attribute_max_front_derailleur_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_min_front_derailleur_tooth READ attribute_min_front_derailleur_tooth WRITE setAttribute_min_front_derailleur_tooth NOTIFY attribute_min_front_derailleur_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_chain_line READ attribute_chain_line WRITE setAttribute_chain_line NOTIFY attribute_chain_lineChanged);
+    Q_PROPERTY(PartAttribute attribute_crank_speed READ attribute_crank_speed WRITE setAttribute_crank_speed NOTIFY attribute_crank_speedChanged);
+    Q_PROPERTY(PartAttribute attribute_front_derailleur_mount READ attribute_front_derailleur_mount WRITE setAttribute_front_derailleur_mount NOTIFY attribute_front_derailleur_mountChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -55,6 +60,11 @@ public:
     PartAttribute attribute_max_sprocket_tooth() const;
     PartAttribute attribute_min_derailleur_tooth() const;
     PartAttribute attribute_max_derailleur_tooth() const;
+    PartAttribute attribute_max_front_derailleur_tooth() const;
+    PartAttribute attribute_min_front_derailleur_tooth() const;
+    PartAttribute attribute_chain_line() const;
+    PartAttribute attribute_crank_speed() const;
+    PartAttribute attribute_front_derailleur_mount() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -78,6 +88,7 @@ private:
     QSqlTableModel* m_model_cassette;
     QSqlTableModel* m_model_chain;
     QSqlTableModel* m_model_rear_derailleur;
+    QSqlTableModel* m_model_front_derailleur;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -101,6 +112,11 @@ private:
     PartAttribute m_attribute_max_sprocket_tooth;
     PartAttribute m_attribute_min_derailleur_tooth;
     PartAttribute m_attribute_max_derailleur_tooth;
+    PartAttribute m_attribute_max_front_derailleur_tooth;
+    PartAttribute m_attribute_min_front_derailleur_tooth;
+    PartAttribute m_attribute_chain_line;
+    PartAttribute m_attribute_crank_speed;
+    PartAttribute m_attribute_front_derailleur_mount;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -125,6 +141,11 @@ signals:
     void attribute_max_sprocket_toothChanged(PartAttribute attribute_max_sprocket_tooth);
     void attribute_min_derailleur_toothChanged(PartAttribute attribute_min_derailleur_tooth);
     void attribute_max_derailleur_toothChanged(PartAttribute attribute_max_derailleur_tooth);
+    void attribute_max_front_derailleur_toothChanged(PartAttribute attribute_max_front_derailleur_tooth);
+    void attribute_min_front_derailleur_toothChanged(PartAttribute attribute_min_front_derailleur_tooth);
+    void attribute_chain_lineChanged(PartAttribute attribute_chain_line);
+    void attribute_crank_speedChanged(PartAttribute attribute_crank_speed);
+    void attribute_front_derailleur_mountChanged(PartAttribute attribute_front_derailleur_mount);
 
 public slots:
     void init();
@@ -153,6 +174,11 @@ public slots:
     void setAttribute_max_sprocket_tooth(PartAttribute attribute_max_sprocket_tooth);
     void setAttribute_min_derailleur_tooth(PartAttribute attribute_min_derailleur_tooth);
     void setAttribute_max_derailleur_tooth(PartAttribute attribute_max_derailleur_tooth);
+    void setAttribute_max_front_derailleur_tooth(PartAttribute attribute_max_front_derailleur_tooth);
+    void setAttribute_min_front_derailleur_tooth(PartAttribute attribute_min_front_derailleur_tooth);
+    void setAttribute_chain_line(PartAttribute attribute_chain_line);
+    void setAttribute_crank_speed(PartAttribute attribute_crank_speed);
+    void setAttribute_front_derailleur_mount(PartAttribute attribute_front_derailleur_mount);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);

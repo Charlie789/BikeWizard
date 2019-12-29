@@ -22,7 +22,12 @@ ModelHandler::ModelHandler(QObject *parent) :
     m_attribute_min_sprocket_tooth(PartAttribute(CustomTypes::AttributeMinSprocketTooth, "-1")),
     m_attribute_max_sprocket_tooth(PartAttribute(CustomTypes::AttributeMaxSprocketTooth, "-1")),
     m_attribute_min_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinDerailleurTooth, "-1")),
-    m_attribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth, "-1"))
+    m_attribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth, "-1")),
+    m_attribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth, "-1")),
+    m_attribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth, "-1")),
+    m_attribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1")),
+    m_attribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1")),
+    m_attribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"))
 
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
@@ -45,6 +50,11 @@ ModelHandler::ModelHandler(QObject *parent) :
     connect(this, &ModelHandler::attribute_max_sprocket_toothChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_min_derailleur_toothChanged, this, &ModelHandler::filter_handler);
     connect(this, &ModelHandler::attribute_max_derailleur_toothChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_max_front_derailleur_toothChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_min_front_derailleur_toothChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_chain_lineChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_crank_speedChanged, this, &ModelHandler::filter_handler);
+    connect(this, &ModelHandler::attribute_front_derailleur_mountChanged, this, &ModelHandler::filter_handler);
 }
 
 ModelHandler::PartAttribute ModelHandler::attribute_wheel_size() const
@@ -137,6 +147,31 @@ ModelHandler::PartAttribute ModelHandler::attribute_max_derailleur_tooth() const
     return m_attribute_max_derailleur_tooth;
 }
 
+ModelHandler::PartAttribute ModelHandler::attribute_max_front_derailleur_tooth() const
+{
+    return m_attribute_max_front_derailleur_tooth;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_min_front_derailleur_tooth() const
+{
+    return m_attribute_min_front_derailleur_tooth;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_chain_line() const
+{
+    return m_attribute_chain_line;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_crank_speed() const
+{
+    return m_attribute_crank_speed;
+}
+
+ModelHandler::PartAttribute ModelHandler::attribute_front_derailleur_mount() const
+{
+    return m_attribute_front_derailleur_mount;
+}
+
 void ModelHandler::filter_handler(ModelHandler::PartAttribute)
 {
     m_model_frame->setFilter(create_filter(CustomTypes::PartFrame));
@@ -155,6 +190,7 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_cassette->setFilter(create_filter(CustomTypes::PartCassette));
     m_model_chain->setFilter(create_filter(CustomTypes::PartChain));
     m_model_rear_derailleur->setFilter(create_filter(CustomTypes::PartRearDerailleur));
+    m_model_front_derailleur->setFilter(create_filter(CustomTypes::PartFrontDerailleur));
 }
 
 void ModelHandler::init()
@@ -255,6 +291,16 @@ void ModelHandler::init()
     m_map_column_index.insert(CustomTypes::PartRearDerailleur, m_map_part_column_index);
     m_map_part_column_index.clear();
 
+    m_map_part_table.insert(CustomTypes::PartFrontDerailleur, "front_derailleur_view");
+    m_map_part_column_index.insert(CustomTypes::AttributeFrontDerailleurMount, 3);
+    m_map_part_column_index.insert(CustomTypes::AttributeCrankSpeed, 4);
+    m_map_part_column_index.insert(CustomTypes::AttributeMaxFrontDerailleurTooth, 5);
+    m_map_part_column_index.insert(CustomTypes::AttributeMinFrontDerailleurTooth, 6);
+    m_map_part_column_index.insert(CustomTypes::AttributeChainSpeed, 7);
+    m_map_part_column_index.insert(CustomTypes::AttributeChainLine, 8);
+    m_map_column_index.insert(CustomTypes::PartFrontDerailleur, m_map_part_column_index);
+    m_map_part_column_index.clear();
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
@@ -272,6 +318,11 @@ void ModelHandler::init()
     m_map_attribute_counter.insert(CustomTypes::AttributeMaxSprocketTooth, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeMinDerailleurTooth, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeMaxDerailleurTooth, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeMaxFrontDerailleurTooth, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeMinFrontDerailleurTooth, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeChainLine, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeCrankSpeed, 0);
+    m_map_attribute_counter.insert(CustomTypes::AttributeFrontDerailleurMount, 0);
 
     emit map_part_table_ready(m_map_part_table);
 }
@@ -326,6 +377,9 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartRearDerailleur:
         m_model_rear_derailleur = model;
+        break;
+    case CustomTypes::PartFrontDerailleur:
+        m_model_front_derailleur = model;
         break;
     }
 }
@@ -457,6 +511,26 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         setAttribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth,
                                                   list->at(m_map_column_index[CustomTypes::PartRearDerailleur][CustomTypes::AttributeMaxDerailleurTooth])));
         m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth]++;
+        break;
+    case CustomTypes::PartFrontDerailleur:
+        setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeChainSpeed])));
+        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
+        setAttribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeMinFrontDerailleurTooth])));
+        m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth]++;
+        setAttribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeMaxFrontDerailleurTooth])));
+        m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth]++;
+        setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeCrankSpeed])));
+        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]++;
+        setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeChainLine])));
+        m_map_attribute_counter[CustomTypes::AttributeChainLine]++;
+        setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount,
+                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeFrontDerailleurMount])));
+        m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]++;
         break;
     }
 }
@@ -619,6 +693,28 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth] <= 0)
             setAttribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth, "-1"));
+        break;
+    }
+    case CustomTypes::PartFrontDerailleur:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
+            setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth] <= 0)
+            setAttribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth] <= 0)
+            setAttribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeCrankSpeed] <= 0)
+            setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeChainLine]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeChainLine] <= 0)
+            setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1"));
+        m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount] <= 0)
+            setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
         break;
     }
     }
@@ -836,6 +932,22 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         }
         break;
     }
+    case CustomTypes::PartFrontDerailleur:
+    {
+        if (attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(attribute_chain_speed().second);
+        }
+        if (attribute_front_derailleur_mount().second != "-1"){
+            filter_properties_list << QString("front_derailleur_mount = '%1'").arg(attribute_front_derailleur_mount().second);
+        }
+        if (attribute_crank_speed().second != "-1"){
+            filter_properties_list << QString("crank_speed = '%1'").arg(attribute_crank_speed().second);
+        }
+        if (attribute_chain_line().second != "-1"){
+            filter_properties_list << QString("chain_line = '%1'").arg(attribute_chain_line().second);
+        }
+        break;
+    }
     }
     qDebug() << part_type << filter_properties_list.join(" AND ");
     return filter_properties_list.join(" AND ");
@@ -1002,6 +1114,51 @@ void ModelHandler::setAttribute_max_derailleur_tooth(ModelHandler::PartAttribute
 
     m_attribute_max_derailleur_tooth = attribute_max_derailleur_tooth;
     emit attribute_max_derailleur_toothChanged(m_attribute_max_derailleur_tooth);
+}
+
+void ModelHandler::setAttribute_max_front_derailleur_tooth(ModelHandler::PartAttribute attribute_max_front_derailleur_tooth)
+{
+    if (m_attribute_max_front_derailleur_tooth == attribute_max_front_derailleur_tooth)
+        return;
+
+    m_attribute_max_front_derailleur_tooth = attribute_max_front_derailleur_tooth;
+    emit attribute_max_front_derailleur_toothChanged(m_attribute_max_front_derailleur_tooth);
+}
+
+void ModelHandler::setAttribute_min_front_derailleur_tooth(ModelHandler::PartAttribute attribute_min_front_derailleur_tooth)
+{
+    if (m_attribute_min_front_derailleur_tooth == attribute_min_front_derailleur_tooth)
+        return;
+
+    m_attribute_min_front_derailleur_tooth = attribute_min_front_derailleur_tooth;
+    emit attribute_min_front_derailleur_toothChanged(m_attribute_min_front_derailleur_tooth);
+}
+
+void ModelHandler::setAttribute_chain_line(ModelHandler::PartAttribute attribute_chain_line)
+{
+    if (m_attribute_chain_line == attribute_chain_line)
+        return;
+
+    m_attribute_chain_line = attribute_chain_line;
+    emit attribute_chain_lineChanged(m_attribute_chain_line);
+}
+
+void ModelHandler::setAttribute_crank_speed(ModelHandler::PartAttribute attribute_crank_speed)
+{
+    if (m_attribute_crank_speed == attribute_crank_speed)
+        return;
+
+    m_attribute_crank_speed = attribute_crank_speed;
+    emit attribute_crank_speedChanged(m_attribute_crank_speed);
+}
+
+void ModelHandler::setAttribute_front_derailleur_mount(ModelHandler::PartAttribute attribute_front_derailleur_mount)
+{
+    if (m_attribute_front_derailleur_mount == attribute_front_derailleur_mount)
+        return;
+
+    m_attribute_front_derailleur_mount = attribute_front_derailleur_mount;
+    emit attribute_front_derailleur_mountChanged(m_attribute_front_derailleur_mount);
 }
 
 void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part)
