@@ -1,8 +1,6 @@
 #ifndef CUSTOMTYPES_H
 #define CUSTOMTYPES_H
 
-#include <QMap>
-
 namespace CustomTypes {
     enum PartType {
         PartFrame,
@@ -26,7 +24,9 @@ namespace CustomTypes {
         PartFrontShifter,
         PartRearShifter,
         PartFrontDisc,
-        PartRearDisc
+        PartRearDisc,
+        PartFrontDiscBrakeSet,
+        PartRearDiscBrakeSet
     };
 
     enum AttributeName {
@@ -57,7 +57,9 @@ namespace CustomTypes {
         AttributeFrontDiscSize,
         AttributeRearDiscSize,
         AttributeFrontDiscMount,
-        AttributeRearDiscMount
+        AttributeRearDiscMount,
+        AttributeFrontDiscBrakeMount,
+        AttributeRearDiscBrakeMount
     };
 
 }

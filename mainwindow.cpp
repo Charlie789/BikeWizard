@@ -106,6 +106,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearDisc:
         m_model_rear_disc = model;
         break;
+    case CustomTypes::PartFrontDiscBrakeSet:
+        m_model_front_disc_brake_set = model;
+        break;
+    case CustomTypes::PartRearDiscBrakeSet:
+        m_model_rear_disc_brake_set = model;
+        break;
     }
 }
 
@@ -122,6 +128,10 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
             front_disc_button = add_select_button(i);
         } else if(i == CustomTypes::PartRearDisc) {
             rear_disc_button = add_select_button(i);
+        } else if(i == CustomTypes::PartFrontDiscBrakeSet) {
+            front_disc_brake_set_button = add_select_button(i);
+        } else if(i == CustomTypes::PartRearDiscBrakeSet) {
+            rear_disc_brake_set_button = add_select_button(i);
         } else {
             add_select_button(i);
         }
@@ -201,6 +211,12 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartRearDisc:
         ui->part_tableview->setModel(m_model_rear_disc);
         break;
+    case CustomTypes::PartFrontDiscBrakeSet:
+        ui->part_tableview->setModel(m_model_front_disc_brake_set);
+        break;
+    case CustomTypes::PartRearDiscBrakeSet:
+        ui->part_tableview->setModel(m_model_rear_disc_brake_set);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
@@ -266,6 +282,12 @@ void MainWindow::set_button_available(CustomTypes::PartType part_type)
     case CustomTypes::PartRearDisc:
         rear_disc_button->setEnabled(true);
         break;
+    case CustomTypes::PartFrontDiscBrakeSet:
+        front_disc_brake_set_button->setEnabled(true);
+        break;
+    case CustomTypes::PartRearDiscBrakeSet:
+        rear_disc_brake_set_button->setEnabled(true);
+        break;
     default:
         break;
     }
@@ -282,6 +304,12 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
         break;
     case CustomTypes::PartRearDisc:
         rear_disc_button->setEnabled(false);
+        break;
+    case CustomTypes::PartFrontDiscBrakeSet:
+        front_disc_brake_set_button->setEnabled(false);
+        break;
+    case CustomTypes::PartRearDiscBrakeSet:
+        rear_disc_brake_set_button->setEnabled(false);
         break;
     default:
         break;

@@ -43,6 +43,8 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_rear_disc_size READ attribute_rear_disc_size WRITE setAttribute_rear_disc_size NOTIFY attribute_rear_disc_sizeChanged);
     Q_PROPERTY(PartAttribute attribute_front_disc_mount READ attribute_front_disc_mount WRITE setAttribute_front_disc_mount NOTIFY attribute_front_disc_mountChanged);
     Q_PROPERTY(PartAttribute attribute_rear_disc_mount READ attribute_rear_disc_mount WRITE setAttribute_rear_disc_mount NOTIFY attribute_rear_disc_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_front_disc_brake_mount READ attribute_front_disc_brake_mount WRITE setAttribute_front_disc_brake_mount NOTIFY attribute_front_disc_brake_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_rear_disc_brake_mount READ attribute_rear_disc_brake_mount WRITE setAttribute_rear_disc_brake_mount NOTIFY attribute_rear_disc_brake_mountChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -75,6 +77,8 @@ public:
     PartAttribute attribute_rear_disc_size() const;
     PartAttribute attribute_front_disc_mount() const;
     PartAttribute attribute_rear_disc_mount() const;
+    PartAttribute attribute_front_disc_brake_mount() const;
+    PartAttribute attribute_rear_disc_brake_mount() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -104,6 +108,8 @@ private:
     QSqlTableModel* m_model_rear_shifter;
     QSqlTableModel* m_model_front_disc;
     QSqlTableModel* m_model_rear_disc;
+    QSqlTableModel* m_model_front_disc_brake_set;
+    QSqlTableModel* m_model_rear_disc_brake_set;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -137,6 +143,8 @@ private:
     PartAttribute m_attribute_rear_disc_size;
     PartAttribute m_attribute_front_disc_mount;
     PartAttribute m_attribute_rear_disc_mount;
+    PartAttribute m_attribute_front_disc_brake_mount;
+    PartAttribute m_attribute_rear_disc_brake_mount;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -173,6 +181,8 @@ signals:
     void attribute_rear_disc_sizeChanged(PartAttribute attribute_rear_disc_size);
     void attribute_front_disc_mountChanged(PartAttribute attribute_front_disc_mount);
     void attribute_rear_disc_mountChanged(PartAttribute attribute_rear_disc_mount);
+    void attribute_front_disc_brake_mountChanged(PartAttribute attribute_front_disc_brake_mount);
+    void attribute_rear_disc_brake_mountChanged(PartAttribute attribute_rear_disc_brake_mount);
 
 public slots:
     void init();
@@ -211,6 +221,8 @@ public slots:
     void setAttribute_rear_disc_size(PartAttribute attribute_rear_disc_size);
     void setAttribute_front_disc_mount(PartAttribute attribute_front_disc_mount);
     void setAttribute_rear_disc_mount(PartAttribute attribute_rear_disc_mount);
+    void setAttribute_front_disc_brake_mount(PartAttribute attribute_front_disc_brake_mount);
+    void setAttribute_rear_disc_brake_mount(PartAttribute attribute_rear_disc_brake_mount);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
