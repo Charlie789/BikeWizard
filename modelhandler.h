@@ -39,6 +39,10 @@ class ModelHandler : public QObject
     Q_PROPERTY(PartAttribute attribute_crank_speed READ attribute_crank_speed WRITE setAttribute_crank_speed NOTIFY attribute_crank_speedChanged);
     Q_PROPERTY(PartAttribute attribute_front_derailleur_mount READ attribute_front_derailleur_mount WRITE setAttribute_front_derailleur_mount NOTIFY attribute_front_derailleur_mountChanged);
     Q_PROPERTY(PartAttribute attribute_max_crank_tooth READ attribute_max_crank_tooth WRITE setAttribute_max_crank_tooth NOTIFY attribute_max_crank_toothChanged);
+    Q_PROPERTY(PartAttribute attribute_front_disc_size READ attribute_front_disc_size WRITE setAttribute_front_disc_size NOTIFY attribute_front_disc_sizeChanged);
+    Q_PROPERTY(PartAttribute attribute_rear_disc_size READ attribute_rear_disc_size WRITE setAttribute_rear_disc_size NOTIFY attribute_rear_disc_sizeChanged);
+    Q_PROPERTY(PartAttribute attribute_front_disc_mount READ attribute_front_disc_mount WRITE setAttribute_front_disc_mount NOTIFY attribute_front_disc_mountChanged);
+    Q_PROPERTY(PartAttribute attribute_rear_disc_mount READ attribute_rear_disc_mount WRITE setAttribute_rear_disc_mount NOTIFY attribute_rear_disc_mountChanged);
 
 public:
     explicit ModelHandler(QObject *parent = nullptr);
@@ -67,6 +71,10 @@ public:
     PartAttribute attribute_crank_speed() const;
     PartAttribute attribute_front_derailleur_mount() const;
     PartAttribute attribute_max_crank_tooth() const;
+    PartAttribute attribute_front_disc_size() const;
+    PartAttribute attribute_rear_disc_size() const;
+    PartAttribute attribute_front_disc_mount() const;
+    PartAttribute attribute_rear_disc_mount() const;
 
 private:
     QMap<CustomTypes::PartType, QString> m_map_part_table;
@@ -94,6 +102,8 @@ private:
     QSqlTableModel* m_model_crank;
     QSqlTableModel* m_model_front_shifter;
     QSqlTableModel* m_model_rear_shifter;
+    QSqlTableModel* m_model_front_disc;
+    QSqlTableModel* m_model_rear_disc;
 
     QStandardItemModel m_model_selected_parts;
 
@@ -123,11 +133,17 @@ private:
     PartAttribute m_attribute_crank_speed;
     PartAttribute m_attribute_front_derailleur_mount;
     PartAttribute m_attribute_max_crank_tooth;
+    PartAttribute m_attribute_front_disc_size;
+    PartAttribute m_attribute_rear_disc_size;
+    PartAttribute m_attribute_front_disc_mount;
+    PartAttribute m_attribute_rear_disc_mount;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
     void selected_parts_model_ready(QStandardItemModel* model);
     void part_deleted(CustomTypes::PartType part_type);
+    void block_part(CustomTypes::PartType part_type);
+    void unlock_part(CustomTypes::PartType part_type);
 
     void attribute_wheel_sizeChanged(PartAttribute attribute_wheel_size);
     void attribute_axle_type_frontChanged(PartAttribute attribute_axle_type_front);
@@ -153,6 +169,10 @@ signals:
     void attribute_crank_speedChanged(PartAttribute attribute_crank_speed);
     void attribute_front_derailleur_mountChanged(PartAttribute attribute_front_derailleur_mount);
     void attribute_max_crank_toothChanged(PartAttribute attribute_max_crank_tooth);
+    void attribute_front_disc_sizeChanged(PartAttribute attribute_front_disc_size);
+    void attribute_rear_disc_sizeChanged(PartAttribute attribute_rear_disc_size);
+    void attribute_front_disc_mountChanged(PartAttribute attribute_front_disc_mount);
+    void attribute_rear_disc_mountChanged(PartAttribute attribute_rear_disc_mount);
 
 public slots:
     void init();
@@ -187,9 +207,14 @@ public slots:
     void setAttribute_crank_speed(PartAttribute attribute_crank_speed);
     void setAttribute_front_derailleur_mount(PartAttribute attribute_front_derailleur_mount);
     void setAttribute_max_crank_tooth(PartAttribute attribute_max_crank_tooth);
+    void setAttribute_front_disc_size(PartAttribute attribute_front_disc_size);
+    void setAttribute_rear_disc_size(PartAttribute attribute_rear_disc_size);
+    void setAttribute_front_disc_mount(PartAttribute attribute_front_disc_mount);
+    void setAttribute_rear_disc_mount(PartAttribute attribute_rear_disc_mount);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);
+    void check_disc_allowed(PartAttribute part_attribute);
 };
 
 #endif // MODELHANDLER_H

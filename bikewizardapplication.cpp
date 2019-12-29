@@ -13,7 +13,8 @@ BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
     connect(&db, &DbConnector::model_ready, &w, &MainWindow::set_model);
     connect(&m_model_handler, &ModelHandler::map_part_table_ready, &db, &DbConnector::set_map_part);
     connect(&m_model_handler, &ModelHandler::selected_parts_model_ready, &w, &MainWindow::set_selected_parts_model);
-
+    connect(&m_model_handler, &ModelHandler::block_part, &w, &MainWindow::set_button_unavailable);
+    connect(&m_model_handler, &ModelHandler::unlock_part, &w, &MainWindow::set_button_available);
 
     db.connect_to_db();
 }

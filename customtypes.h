@@ -24,7 +24,9 @@ namespace CustomTypes {
         PartFrontDerailleur,
         PartCrank,
         PartFrontShifter,
-        PartRearShifter
+        PartRearShifter,
+        PartFrontDisc,
+        PartRearDisc
     };
 
     enum AttributeName {
@@ -51,7 +53,11 @@ namespace CustomTypes {
         AttributeMaxCrankTooth,
         AttributeChainLine,
         AttributeCrankSpeed,
-        AttributeFrontDerailleurMount
+        AttributeFrontDerailleurMount,
+        AttributeFrontDiscSize,
+        AttributeRearDiscSize,
+        AttributeFrontDiscMount,
+        AttributeRearDiscMount
     };
 
 }

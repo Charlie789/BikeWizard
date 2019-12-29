@@ -41,11 +41,15 @@ private:
     QSqlTableModel* m_model_crank;
     QSqlTableModel* m_model_front_shifter;
     QSqlTableModel* m_model_rear_shifter;
+    QSqlTableModel* m_model_front_disc;
+    QSqlTableModel* m_model_rear_disc;
 
     QStandardItemModel* m_selected_parts_model;
 
     int inner_tube_row;
     QPushButton* inner_tube_button;
+    QPushButton* front_disc_button;
+    QPushButton* rear_disc_button;
 
     QPushButton* add_select_button(int row_index);
     void add_delete_button(int row_index);
@@ -53,6 +57,8 @@ private:
 public slots:
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
     void set_selected_parts_model(QStandardItemModel* model);
+    void set_button_available(CustomTypes::PartType part_type);
+    void set_button_unavailable(CustomTypes::PartType part_type);
 
 private slots:
     void select_part_button_clicked();
@@ -60,10 +66,11 @@ private slots:
     void on_accept_pushbutton_clicked();
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
     void on_back_pushbutton_clicked();
-    void set_inner_tube_button_available(CustomTypes::PartType part_type, QList<QString>*);
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
     void part_has_to_be_remove(CustomTypes::PartType part_type);
+    void unlock_part(CustomTypes::PartType part_type);
+    void block_part(CustomTypes::PartType part_type);
 };
 #endif // MAINWINDOW_H

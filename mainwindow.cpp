@@ -9,7 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     connect(this, &MainWindow::part_changed, this, &MainWindow::prepare_delete_button);
-    connect(this, &MainWindow::part_changed, this, &MainWindow::set_inner_tube_button_available);
+    connect(this, &MainWindow::unlock_part, this, &MainWindow::set_button_available);
+    connect(this, &MainWindow::block_part, this, &MainWindow::set_button_unavailable);
 }
 
 MainWindow::~MainWindow()
@@ -99,6 +100,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearShifter:
         m_model_rear_shifter = model;
         break;
+    case CustomTypes::PartFrontDisc:
+        m_model_front_disc = model;
+        break;
+    case CustomTypes::PartRearDisc:
+        m_model_rear_disc = model;
+        break;
     }
 }
 
@@ -111,6 +118,10 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
         if (i == CustomTypes::PartInnerTube){
             inner_tube_button = add_select_button(i);
             inner_tube_button->setEnabled(false);
+        } else if(i == CustomTypes::PartFrontDisc) {
+            front_disc_button = add_select_button(i);
+        } else if(i == CustomTypes::PartRearDisc) {
+            rear_disc_button = add_select_button(i);
         } else {
             add_select_button(i);
         }
@@ -184,6 +195,12 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartRearShifter:
         ui->part_tableview->setModel(m_model_rear_shifter);
         break;
+    case CustomTypes::PartFrontDisc:
+        ui->part_tableview->setModel(m_model_front_disc);
+        break;
+    case CustomTypes::PartRearDisc:
+        ui->part_tableview->setModel(m_model_rear_disc);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
@@ -204,7 +221,7 @@ void MainWindow::delete_part_button_clicked()
     if(part_type == CustomTypes::PartTire){
         emit part_has_to_be_remove(CustomTypes::PartInnerTube);
         inner_tube_button = add_select_button(inner_tube_row);
-        inner_tube_button->setEnabled(false);
+        emit block_part(CustomTypes::PartInnerTube);
     }
 }
 
@@ -217,6 +234,8 @@ void MainWindow::on_accept_pushbutton_clicked()
         list << ui->part_tableview->model()->index(index.row(), column).data().toString();
     }
     emit part_changed(part_type, &list);
+    if(part_type == CustomTypes::PartTire)
+        emit unlock_part(CustomTypes::PartInnerTube);
     ui->stackedWidget->setCurrentIndex(0);
 }
 
@@ -235,8 +254,36 @@ void MainWindow::on_back_pushbutton_clicked()
     ui->stackedWidget->setCurrentIndex(0);
 }
 
-void MainWindow::set_inner_tube_button_available(CustomTypes::PartType part_type, QList<QString> *)
+void MainWindow::set_button_available(CustomTypes::PartType part_type)
 {
-    if (part_type == CustomTypes::PartTire)
+    switch (part_type){
+    case CustomTypes::PartInnerTube:
         inner_tube_button->setEnabled(true);
+        break;
+    case CustomTypes::PartFrontDisc:
+        front_disc_button->setEnabled(true);
+        break;
+    case CustomTypes::PartRearDisc:
+        rear_disc_button->setEnabled(true);
+        break;
+    default:
+        break;
+    }
+}
+
+void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
+{
+    switch (part_type){
+    case CustomTypes::PartInnerTube:
+        inner_tube_button->setEnabled(false);
+        break;
+    case CustomTypes::PartFrontDisc:
+        front_disc_button->setEnabled(false);
+        break;
+    case CustomTypes::PartRearDisc:
+        rear_disc_button->setEnabled(false);
+        break;
+    default:
+        break;
+    }
 }
