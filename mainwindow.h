@@ -7,6 +7,7 @@
 #include <QStandardItemModel>
 #include <QPushButton>
 #include <QPointer>
+#include "backgroundcolordelegate.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -67,6 +68,7 @@ private:
     QPushButton* add_select_button(int row_index);
     void add_delete_button(int row_index);
 
+    BackgroundColorDelegate m_bg_delegate;
 public slots:
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
     void set_selected_parts_model(QStandardItemModel* model);

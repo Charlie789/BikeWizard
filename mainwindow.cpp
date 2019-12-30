@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::part_changed, this, &MainWindow::prepare_delete_button);
     connect(this, &MainWindow::unlock_part, this, &MainWindow::set_button_available);
     connect(this, &MainWindow::block_part, this, &MainWindow::set_button_unavailable);
+    ui->part_tableview->setItemDelegate(&m_bg_delegate);
 }
 
 MainWindow::~MainWindow()

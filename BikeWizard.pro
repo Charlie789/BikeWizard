@@ -6,6 +6,7 @@ CONFIG += c++11
 DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
+    backgroundcolordelegate.cpp \
     bikewizardapplication.cpp \
     dbconnector.cpp \
     main.cpp \
@@ -13,6 +14,7 @@ SOURCES += \
     modelhandler.cpp
 
 HEADERS += \
+    backgroundcolordelegate.h \
     bikewizardapplication.h \
     customtypes.h \
     dbconnector.h \
