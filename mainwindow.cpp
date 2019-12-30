@@ -118,6 +118,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearVBrake:
         m_model_rear_vbrake = model;
         break;
+    case CustomTypes::PartFrontLever:
+        m_model_front_lever = model;
+        break;
+    case CustomTypes::PartRearLever:
+        m_model_rear_lever = model;
+        break;
     }
 }
 
@@ -142,6 +148,10 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
             front_vbrake_button = add_select_button(i);
         } else if(i == CustomTypes::PartRearVBrake) {
             rear_vbrake_button = add_select_button(i);
+        } else if(i == CustomTypes::PartFrontLever) {
+            front_lever_button = add_select_button(i);
+        } else if(i == CustomTypes::PartRearLever) {
+            rear_lever_button = add_select_button(i);
         } else {
             add_select_button(i);
         }
@@ -233,6 +243,12 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartRearVBrake:
         ui->part_tableview->setModel(m_model_rear_vbrake);
         break;
+    case CustomTypes::PartFrontLever:
+        ui->part_tableview->setModel(m_model_front_lever);
+        break;
+    case CustomTypes::PartRearLever:
+        ui->part_tableview->setModel(m_model_rear_lever);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
@@ -258,6 +274,10 @@ void MainWindow::delete_part_button_clicked()
                 front_vbrake_button = add_select_button(i);
             } else if(part_type == CustomTypes::PartRearVBrake) {
                 rear_vbrake_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartFrontLever) {
+                front_lever_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartRearLever) {
+                rear_lever_button = add_select_button(i);
             } else {
                 add_select_button(i);
             }
@@ -331,6 +351,14 @@ void MainWindow::set_button_available(CustomTypes::PartType part_type)
         if(rear_vbrake_button)
             rear_vbrake_button->setEnabled(true);
         break;
+    case CustomTypes::PartFrontLever:
+        if(front_lever_button)
+            front_lever_button->setEnabled(true);
+        break;
+    case CustomTypes::PartRearLever:
+        if(rear_lever_button)
+            rear_lever_button->setEnabled(true);
+        break;
     default:
         break;
     }
@@ -366,6 +394,14 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
     case CustomTypes::PartRearVBrake:
         if(rear_vbrake_button)
             rear_vbrake_button->setEnabled(false);
+        break;
+    case CustomTypes::PartFrontLever:
+        if(front_lever_button)
+            front_lever_button->setEnabled(false);
+        break;
+    case CustomTypes::PartRearLever:
+        if(rear_lever_button)
+            rear_lever_button->setEnabled(false);
         break;
     default:
         break;

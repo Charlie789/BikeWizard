@@ -288,6 +288,8 @@ void ModelHandler::filter_handler(ModelHandler::PartAttribute)
     m_model_rear_disc_brake_set->setFilter(create_filter(CustomTypes::PartRearDiscBrakeSet));
     m_model_front_vbrake->setFilter(create_filter(CustomTypes::PartFrontVBrake));
     m_model_rear_vbrake->setFilter(create_filter(CustomTypes::PartRearVBrake));
+    m_model_front_lever->setFilter(create_filter(CustomTypes::PartFrontLever));
+    m_model_rear_lever->setFilter(create_filter(CustomTypes::PartRearLever));
 }
 
 void ModelHandler::init()
@@ -452,6 +454,10 @@ void ModelHandler::init()
 
     m_map_part_table.insert(CustomTypes::PartRearVBrake, "rear_vbrake_view");
 
+    m_map_part_table.insert(CustomTypes::PartFrontLever, "front_lever_view");
+
+    m_map_part_table.insert(CustomTypes::PartRearLever, "rear_lever_view");
+
     m_map_attribute_counter.insert(CustomTypes::AttributeWheelSize, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeFront, 0);
     m_map_attribute_counter.insert(CustomTypes::AttributeAxleTypeRear, 0);
@@ -569,6 +575,12 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
         break;
     case CustomTypes::PartRearVBrake:
         m_model_rear_vbrake = model;
+        break;
+    case CustomTypes::PartFrontLever:
+        m_model_front_lever = model;
+        break;
+    case CustomTypes::PartRearLever:
+        m_model_rear_lever = model;
         break;
     }
 }
@@ -814,6 +826,14 @@ void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
         break;
     case CustomTypes::PartRearVBrake:
+        setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "vbrake"));
+        m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
+        break;
+    case CustomTypes::PartFrontLever:
+        setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "vbrake"));
+        m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
+        break;
+    case CustomTypes::PartRearLever:
         setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "vbrake"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
         break;
@@ -1116,6 +1136,20 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
         break;
     }
     case CustomTypes::PartRearVBrake:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
+            setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
+        break;
+    }
+    case CustomTypes::PartFrontLever:
+    {
+        m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]--;
+        if (m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake] <= 0)
+            setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
+        break;
+    }
+    case CustomTypes::PartRearLever:
     {
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
@@ -1463,10 +1497,9 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
     }
 
     case CustomTypes::PartFrontVBrake:
-    {
-        break;
-    }
     case CustomTypes::PartRearVBrake:
+    case CustomTypes::PartFrontLever:
+    case CustomTypes::PartRearLever:
     {
         break;
     }
@@ -1806,14 +1839,17 @@ void ModelHandler::check_disc_allowed(ModelHandler::PartAttribute part_attribute
             emit block_part(CustomTypes::PartFrontDisc);
             emit block_part(CustomTypes::PartFrontDiscBrakeSet);
             emit unlock_part(CustomTypes::PartFrontVBrake);
+            emit unlock_part(CustomTypes::PartFrontLever);
         } else if (part_attribute.second == "disc"){
             emit unlock_part(CustomTypes::PartFrontDisc);
             emit unlock_part(CustomTypes::PartFrontDiscBrakeSet);
             emit block_part(CustomTypes::PartFrontVBrake);
+            emit block_part(CustomTypes::PartFrontLever);
         } else {
             emit unlock_part(CustomTypes::PartFrontDisc);
             emit unlock_part(CustomTypes::PartFrontDiscBrakeSet);
             emit unlock_part(CustomTypes::PartFrontVBrake);
+            emit unlock_part(CustomTypes::PartFrontLever);
         }
         break;
     case CustomTypes::AttributeSelectedRearBrake:
@@ -1821,14 +1857,17 @@ void ModelHandler::check_disc_allowed(ModelHandler::PartAttribute part_attribute
             emit block_part(CustomTypes::PartRearDisc);
             emit block_part(CustomTypes::PartRearDiscBrakeSet);
             emit unlock_part(CustomTypes::PartRearVBrake);
+            emit unlock_part(CustomTypes::PartRearLever);
         } else if (part_attribute.second == "disc"){
             emit unlock_part(CustomTypes::PartRearDisc);
             emit unlock_part(CustomTypes::PartRearDiscBrakeSet);
             emit block_part(CustomTypes::PartRearVBrake);
+            emit block_part(CustomTypes::PartRearLever);
         } else {
             emit unlock_part(CustomTypes::PartRearDisc);
             emit unlock_part(CustomTypes::PartRearDiscBrakeSet);
             emit unlock_part(CustomTypes::PartRearVBrake);
+            emit unlock_part(CustomTypes::PartRearLever);
         }
         break;
     case CustomTypes::AttributeFrontDiscBrakeMount:
@@ -1858,15 +1897,19 @@ void ModelHandler::check_disc_allowed(ModelHandler::PartAttribute part_attribute
     case CustomTypes::AttributeFrontVBrakeMount:
         if ((part_attribute.second == "1" || part_attribute.second == "-1") && selected_front_brake().second != "disc") {
             emit unlock_part(CustomTypes::PartFrontVBrake);
+            emit unlock_part(CustomTypes::PartFrontLever);
         } else {
             emit block_part(CustomTypes::PartFrontVBrake);
+            emit block_part(CustomTypes::PartFrontLever);
         }
         break;
     case CustomTypes::AttributeRearVBrakeMount:
         if (part_attribute.second == "1" || part_attribute.second == "-1") {
             emit unlock_part(CustomTypes::PartRearVBrake);
+            emit unlock_part(CustomTypes::PartRearLever);
         } else {
             emit block_part(CustomTypes::PartRearVBrake);
+            emit block_part(CustomTypes::PartRearLever);
         }
         break;
     default:
