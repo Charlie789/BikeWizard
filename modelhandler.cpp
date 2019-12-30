@@ -1165,7 +1165,7 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
         if (attribute_front_disc_mount().second != "-1"){
             filter_properties_list << QString("disc_mount_system = '%1'").arg(attribute_front_disc_mount().second);
         }
-        if (selected_rear_brake().second == "disc"){
+        if (selected_front_brake().second == "disc"){
             filter_properties_list << QString("disc_mount_system IS NOT NULL");
         }
         break;
