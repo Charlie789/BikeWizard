@@ -46,6 +46,8 @@ private:
     QSqlTableModel* m_model_rear_disc;
     QSqlTableModel* m_model_front_disc_brake_set;
     QSqlTableModel* m_model_rear_disc_brake_set;
+    QSqlTableModel* m_model_front_vbrake;
+    QSqlTableModel* m_model_rear_vbrake;
 
     QStandardItemModel* m_selected_parts_model;
 
@@ -55,6 +57,8 @@ private:
     QPointer<QPushButton> rear_disc_button;
     QPointer<QPushButton> front_disc_brake_set_button;
     QPointer<QPushButton> rear_disc_brake_set_button;
+    QPointer<QPushButton> front_vbrake_button;
+    QPointer<QPushButton> rear_vbrake_button;
 
     QPushButton* add_select_button(int row_index);
     void add_delete_button(int row_index);

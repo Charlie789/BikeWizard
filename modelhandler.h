@@ -120,6 +120,8 @@ private:
     QSqlTableModel* m_model_rear_disc;
     QSqlTableModel* m_model_front_disc_brake_set;
     QSqlTableModel* m_model_rear_disc_brake_set;
+    QSqlTableModel* m_model_front_vbrake;
+    QSqlTableModel* m_model_rear_vbrake;
 
     QStandardItemModel m_model_selected_parts;
 

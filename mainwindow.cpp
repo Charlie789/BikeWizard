@@ -112,6 +112,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
     case CustomTypes::PartRearDiscBrakeSet:
         m_model_rear_disc_brake_set = model;
         break;
+    case CustomTypes::PartFrontVBrake:
+        m_model_front_vbrake = model;
+        break;
+    case CustomTypes::PartRearVBrake:
+        m_model_rear_vbrake = model;
+        break;
     }
 }
 
@@ -132,6 +138,10 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
             front_disc_brake_set_button = add_select_button(i);
         } else if(i == CustomTypes::PartRearDiscBrakeSet) {
             rear_disc_brake_set_button = add_select_button(i);
+        } else if(i == CustomTypes::PartFrontVBrake) {
+            front_vbrake_button = add_select_button(i);
+        } else if(i == CustomTypes::PartRearVBrake) {
+            rear_vbrake_button = add_select_button(i);
         } else {
             add_select_button(i);
         }
@@ -217,6 +227,12 @@ void MainWindow::select_part_button_clicked()
     case CustomTypes::PartRearDiscBrakeSet:
         ui->part_tableview->setModel(m_model_rear_disc_brake_set);
         break;
+    case CustomTypes::PartFrontVBrake:
+        ui->part_tableview->setModel(m_model_front_vbrake);
+        break;
+    case CustomTypes::PartRearVBrake:
+        ui->part_tableview->setModel(m_model_rear_vbrake);
+        break;
     }
     ui->part_tableview->hideColumn(2);
     ui->part_tableview->setProperty("part_type", part_type);
@@ -230,7 +246,21 @@ void MainWindow::delete_part_button_clicked()
     for (int i = 0; i < ui->selected_parts_tableview->model()->rowCount(); ++i){
         QModelIndex index_part_type = ui->selected_parts_tableview->model()->index(i, TableProperties::SelectedParts::ColumnPartType);
         if (ui->selected_parts_tableview->model()->data(index_part_type).toInt() == part_type){
-            add_select_button(i);
+            if(part_type == CustomTypes::PartFrontDisc) {
+                front_disc_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartRearDisc) {
+                rear_disc_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartFrontDiscBrakeSet) {
+                front_disc_brake_set_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartRearDiscBrakeSet) {
+                rear_disc_brake_set_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartFrontVBrake) {
+                front_vbrake_button = add_select_button(i);
+            } else if(part_type == CustomTypes::PartRearVBrake) {
+                rear_vbrake_button = add_select_button(i);
+            } else {
+                add_select_button(i);
+            }
         }
     }
     emit part_has_to_be_remove(part_type);
@@ -293,6 +323,14 @@ void MainWindow::set_button_available(CustomTypes::PartType part_type)
         if(rear_disc_brake_set_button)
             rear_disc_brake_set_button->setEnabled(true);
         break;
+    case CustomTypes::PartFrontVBrake:
+        if(front_vbrake_button)
+            front_vbrake_button->setEnabled(true);
+        break;
+    case CustomTypes::PartRearVBrake:
+        if(rear_vbrake_button)
+            rear_vbrake_button->setEnabled(true);
+        break;
     default:
         break;
     }
@@ -320,6 +358,14 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
     case CustomTypes::PartRearDiscBrakeSet:
         if(rear_disc_brake_set_button)
             rear_disc_brake_set_button->setEnabled(false);
+        break;
+    case CustomTypes::PartFrontVBrake:
+        if(front_vbrake_button)
+            front_vbrake_button->setEnabled(false);
+        break;
+    case CustomTypes::PartRearVBrake:
+        if(rear_vbrake_button)
+            rear_vbrake_button->setEnabled(false);
         break;
     default:
         break;

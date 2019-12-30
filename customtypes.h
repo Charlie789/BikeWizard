@@ -26,7 +26,9 @@ namespace CustomTypes {
         PartFrontDisc,
         PartRearDisc,
         PartFrontDiscBrakeSet,
-        PartRearDiscBrakeSet
+        PartRearDiscBrakeSet,
+        PartFrontVBrake,
+        PartRearVBrake
     };
 
     enum AttributeName {
@@ -63,7 +65,7 @@ namespace CustomTypes {
         AttributeFrontVBrakeMount,
         AttributeRearVBrakeMount,
         AttributeSelectedFrontBrake,
-        AttributeSelectedRearBrake
+        AttributeSelectedRearBrake,
     };
 
 }
