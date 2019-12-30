@@ -247,7 +247,7 @@ void ModelHandler::init_db()
 
 void ModelHandler::init_properties(PropertyContainer *prop)
 {
-    m_property_handler = prop;
+    m_property_container = prop;
 }
 
 void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* model)
@@ -342,255 +342,35 @@ void ModelHandler::set_model(CustomTypes::PartType part_type, QSqlTableModel* mo
 
 void ModelHandler::set_properties(CustomTypes::PartType part_type, QList<QString> *list)
 {
+    QList<PartAttribute> property_attributes_list;
+    QList<CustomTypes::AttributeName> keys = m_map_column_index[part_type].keys();
+    for (int key_number = 0; key_number < keys.count(); key_number++){
+        property_attributes_list.append(PartAttribute(keys[key_number], list->at(m_map_column_index[part_type][keys[key_number]])));
+        m_map_attribute_counter[keys[key_number]]++;
+    }
+    emit property_attribute_list_ready(property_attributes_list);
     switch(part_type){
-    case CustomTypes::PartFork:
-        m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
-                                              list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeWheelSize])));
-        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        m_property_handler->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront,
-                                                   list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeAxleTypeFront])));
-        m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]++;
-        m_property_handler->setAttribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter,
-                                                   list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeSteererTubeDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter]++;
-        m_property_handler->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeFrontVBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]++;
-        m_property_handler->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFork][CustomTypes::AttributeFrontDiscBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]++;
-        break;
-    case CustomTypes::PartFrame:
-        m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
-                                              list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeWheelSize])));
-        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        m_property_handler->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeAxleTypeRear])));
-        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
-        m_property_handler->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeHeadset])));
-        m_map_attribute_counter[CustomTypes::AttributeHeadset]++;
-        m_property_handler->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeSeatpostDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
-        m_property_handler->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeBBType])));
-        m_map_attribute_counter[CustomTypes::AttributeBBType]++;
-        m_property_handler->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeFrontDerailleurMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]++;
-        m_property_handler->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeRearVBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]++;
-        m_property_handler->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrame][CustomTypes::AttributeRearDiscBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]++;
-        break;
-    case CustomTypes::PartFrontWheel:
-        m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
-                                              list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeWheelSize])));
-        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        m_property_handler->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront,
-                                                   list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeAxleTypeFront])));
-        m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]++;
-        m_property_handler->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeFrontDiscMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount]++;
-        m_property_handler->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontWheel][CustomTypes::AttributeFrontVBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]++;
-        break;
-    case CustomTypes::PartRearWheel:
-        m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
-                                              list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeWheelSize])));
-        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        m_property_handler->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeAxleTypeRear])));
-        m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]++;
-        m_property_handler->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeRearDiscMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]++;
-        m_property_handler->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearWheel][CustomTypes::AttributeRearVBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]++;
-        break;
-    case CustomTypes::PartHeadset:
-        m_property_handler->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset,
-                                                  list->at(m_map_column_index[CustomTypes::PartHeadset][CustomTypes::AttributeHeadset])));
-        m_map_attribute_counter[CustomTypes::AttributeHeadset]++;
-        break;
-    case CustomTypes::PartHandlebar:
-        m_property_handler->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter,
-                                                  list->at(m_map_column_index[CustomTypes::PartHandlebar][CustomTypes::AttributeHandlebarDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter]++;
-        break;
-    case CustomTypes::PartStem:
-        m_property_handler->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter,
-                                                  list->at(m_map_column_index[CustomTypes::PartStem][CustomTypes::AttributeHandlebarDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter]++;
-        m_property_handler->setAttribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter,
-                                                  list->at(m_map_column_index[CustomTypes::PartStem][CustomTypes::AttributeStemSteererTubeDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter]++;
-        break;
-    case CustomTypes::PartSeatpost:
-        m_property_handler->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter,
-                                                  list->at(m_map_column_index[CustomTypes::PartSeatpost][CustomTypes::AttributeSeatpostDiameter])));
-        m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]++;
-        m_property_handler->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting,
-                                                  list->at(m_map_column_index[CustomTypes::PartSeatpost][CustomTypes::AttributeSaddleMounting])));
-        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]++;
-        break;
-    case CustomTypes::PartSaddle:
-        m_property_handler->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting,
-                                                  list->at(m_map_column_index[CustomTypes::PartSaddle][CustomTypes::AttributeSaddleMounting])));
-        m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]++;
-        break;
-    case CustomTypes::PartTire:
-        m_property_handler->setAttribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth,
-                                                  list->at(m_map_column_index[CustomTypes::PartTire][CustomTypes::AttributeTireWidth])));
-        m_map_attribute_counter[CustomTypes::AttributeTireWidth]++;
-        m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize,
-                                              list->at(m_map_column_index[CustomTypes::PartTire][CustomTypes::AttributeWheelSize])));
-        m_map_attribute_counter[CustomTypes::AttributeWheelSize]++;
-        break;
-    case CustomTypes::PartInnerTube:
-        break;
-    case CustomTypes::PartBB:
-        m_property_handler->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType,
-                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBType])));
-        m_map_attribute_counter[CustomTypes::AttributeBBType]++;
-        m_property_handler->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType,
-                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBAxisType])));
-        m_map_attribute_counter[CustomTypes::AttributeBBAxisType]++;
-        m_property_handler->setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength,
-                                                  list->at(m_map_column_index[CustomTypes::PartBB][CustomTypes::AttributeBBAxisLength])));
-        m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]++;
-        break;
-    case CustomTypes::PartGrip:
-        break;
-    case CustomTypes::PartCassette:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartCassette][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        m_property_handler->setAttribute_min_sprocket_tooth(PartAttribute(CustomTypes::AttributeMinSprocketTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartCassette][CustomTypes::AttributeMinSprocketTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMinSprocketTooth]++;
-        m_property_handler->setAttribute_max_sprocket_tooth(PartAttribute(CustomTypes::AttributeMaxSprocketTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartCassette][CustomTypes::AttributeMaxSprocketTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMaxSprocketTooth]++;
-        break;
-    case CustomTypes::PartChain:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartChain][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        break;
-    case CustomTypes::PartRearDerailleur:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDerailleur][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        m_property_handler->setAttribute_min_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinDerailleurTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDerailleur][CustomTypes::AttributeMinDerailleurTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMinDerailleurTooth]++;
-        m_property_handler->setAttribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDerailleur][CustomTypes::AttributeMaxDerailleurTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth]++;
-        break;
-    case CustomTypes::PartFrontDerailleur:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        m_property_handler->setAttribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeMinFrontDerailleurTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth]++;
-        m_property_handler->setAttribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeMaxFrontDerailleurTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth]++;
-        m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeCrankSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]++;
-        m_property_handler->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeChainLine])));
-        m_map_attribute_counter[CustomTypes::AttributeChainLine]++;
-        m_property_handler->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDerailleur][CustomTypes::AttributeFrontDerailleurMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]++;
-        break;
-    case CustomTypes::PartCrank:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeCrankSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]++;
-        m_property_handler->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine,
-                                                  list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeChainLine])));
-        m_map_attribute_counter[CustomTypes::AttributeChainLine]++;
-        m_property_handler->setAttribute_max_crank_tooth(PartAttribute(CustomTypes::AttributeMaxCrankTooth,
-                                                  list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeMaxCrankTooth])));
-        m_map_attribute_counter[CustomTypes::AttributeMaxCrankTooth]++;
-        m_property_handler->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType,
-                                                  list->at(m_map_column_index[CustomTypes::PartCrank][CustomTypes::AttributeBBAxisType])));
-        m_map_attribute_counter[CustomTypes::AttributeBBAxisType]++;
-        break;
-    case CustomTypes::PartFrontShifter:
-        m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontShifter][CustomTypes::AttributeCrankSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]++;
-        break;
-    case CustomTypes::PartRearShifter:
-        m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearShifter][CustomTypes::AttributeChainSpeed])));
-        m_map_attribute_counter[CustomTypes::AttributeChainSpeed]++;
-        break;
     case CustomTypes::PartFrontDisc:
-        m_property_handler->setAttribute_front_disc_size(PartAttribute(CustomTypes::AttributeFrontDiscSize,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDisc][CustomTypes::AttributeFrontDiscSize])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDiscSize]++;
-        m_property_handler->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDisc][CustomTypes::AttributeFrontDiscMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount]++;
-        m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "disc"));
+    case CustomTypes::PartFrontDiscBrakeSet:
+        m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "disc"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
         break;
     case CustomTypes::PartRearDisc:
-        m_property_handler->setAttribute_rear_disc_size(PartAttribute(CustomTypes::AttributeRearDiscSize,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDisc][CustomTypes::AttributeRearDiscSize])));
-        m_map_attribute_counter[CustomTypes::AttributeRearDiscSize]++;
-        m_property_handler->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDisc][CustomTypes::AttributeRearDiscMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]++;
-        m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "disc"));
-        m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
-        break;
-    case CustomTypes::PartFrontDiscBrakeSet:
-        m_property_handler->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartFrontDiscBrakeSet][CustomTypes::AttributeFrontDiscBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]++;
-        m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "disc"));
-        m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
-        break;
     case CustomTypes::PartRearDiscBrakeSet:
-        m_property_handler->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount,
-                                                  list->at(m_map_column_index[CustomTypes::PartRearDiscBrakeSet][CustomTypes::AttributeRearDiscBrakeMount])));
-        m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]++;
-        m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "disc"));
+        m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "disc"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
         break;
     case CustomTypes::PartFrontVBrake:
-        m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "vbrake"));
+    case CustomTypes::PartFrontLever:
+        m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "vbrake"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
         break;
     case CustomTypes::PartRearVBrake:
-        m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "vbrake"));
-        m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
-        break;
-    case CustomTypes::PartFrontLever:
-        m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "vbrake"));
-        m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]++;
-        break;
     case CustomTypes::PartRearLever:
-        m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "vbrake"));
+        m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "vbrake"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]++;
+        break;
+    default:
         break;
     }
 }
@@ -602,130 +382,130 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
     {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
-            m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+            m_property_container->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]--;
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront] <= 0)
-            m_property_handler->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
+            m_property_container->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSteererTubeDiameter] <= 0)
-            m_property_handler->setAttribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter, "-1"));
+            m_property_container->setAttribute_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeSteererTubeDiameter, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount] <= 0)
-            m_property_handler->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1"));
+            m_property_container->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount] <= 0)
-            m_property_handler->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
+            m_property_container->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartFrame:
     {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
-            m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+            m_property_container->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]--;
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear] <= 0)
-            m_property_handler->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
+            m_property_container->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeHeadset]--;
         if (m_map_attribute_counter[CustomTypes::AttributeHeadset] <= 0)
-            m_property_handler->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1"));
+            m_property_container->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
-            m_property_handler->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
+            m_property_container->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeBBType]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBType] <= 0)
-            m_property_handler->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
+            m_property_container->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount] <= 0)
-            m_property_handler->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
+            m_property_container->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount] <= 0)
-            m_property_handler->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
+            m_property_container->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount] <= 0)
-            m_property_handler->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
+            m_property_container->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartFrontWheel:
     {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
-            m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+            m_property_container->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront]--;
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeFront] <= 0)
-            m_property_handler->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
+            m_property_container->setAttribute_axle_type_front(PartAttribute(CustomTypes::AttributeAxleTypeFront, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount] <= 0)
-            m_property_handler->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount, "-1"));
+            m_property_container->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontVBrakeMount] <= 0)
-            m_property_handler->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1"));
+            m_property_container->setAttribute_front_vbrake_mount(PartAttribute(CustomTypes::AttributeFrontVBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartRearWheel:
     {
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
-            m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+            m_property_container->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear]--;
         if (m_map_attribute_counter[CustomTypes::AttributeAxleTypeRear] <= 0)
-            m_property_handler->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
+            m_property_container->setAttribute_axle_type_rear(PartAttribute(CustomTypes::AttributeAxleTypeRear, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscMount] <= 0)
-            m_property_handler->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1"));
+            m_property_container->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearVBrakeMount] <= 0)
-            m_property_handler->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
+            m_property_container->setAttribute_rear_vbrake_mount(PartAttribute(CustomTypes::AttributeRearVBrakeMount, "-1"));
         break;
     }
     case CustomTypes::PartHeadset:
     {
         m_map_attribute_counter[CustomTypes::AttributeHeadset]--;
         if (m_map_attribute_counter[CustomTypes::AttributeHeadset] <= 0)
-            m_property_handler->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1"));
+            m_property_container->setAttribute_headset(PartAttribute(CustomTypes::AttributeHeadset, "-1"));
         break;
     }
     case CustomTypes::PartHandlebar:
     {
         m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter] <= 0)
-            m_property_handler->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1"));
+            m_property_container->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1"));
         break;
     }
     case CustomTypes::PartStem:
     {
         m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeHandlebarDiameter] <= 0)
-            m_property_handler->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1"));
+            m_property_container->setAttribute_handlebar_diameter(PartAttribute(CustomTypes::AttributeHandlebarDiameter, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeStemSteererTubeDiameter] <= 0)
-            m_property_handler->setAttribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1"));
+            m_property_container->setAttribute_stem_steerer_tube_diameter(PartAttribute(CustomTypes::AttributeStemSteererTubeDiameter, "-1"));
         break;
     }
     case CustomTypes::PartSeatpost:
     {
         m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSeatpostDiameter] <= 0)
-            m_property_handler->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
+            m_property_container->setAttribute_seatpost_diameter(PartAttribute(CustomTypes::AttributeSeatpostDiameter, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSaddleMounting] <= 0)
-            m_property_handler->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
+            m_property_container->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
         break;
     }
     case CustomTypes::PartSaddle:
     {
         m_map_attribute_counter[CustomTypes::AttributeSaddleMounting]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSaddleMounting] <= 0)
-            m_property_handler->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
+            m_property_container->setAttribute_saddle_mounting(PartAttribute(CustomTypes::AttributeSaddleMounting, "-1"));
         break;
     }
     case CustomTypes::PartTire:
     {
         m_map_attribute_counter[CustomTypes::AttributeTireWidth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeTireWidth] <= 0)
-            m_property_handler->setAttribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1"));
+            m_property_container->setAttribute_tire_width(PartAttribute(CustomTypes::AttributeTireWidth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeWheelSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeWheelSize] <= 0)
-            m_property_handler->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
+            m_property_container->setAttribute_wheel_size(PartAttribute(CustomTypes::AttributeWheelSize, "-1"));
         break;
     }
     case CustomTypes::PartInnerTube:
@@ -736,13 +516,13 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
     {
         m_map_attribute_counter[CustomTypes::AttributeBBType]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBType] <= 0)
-            m_property_handler->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
+            m_property_container->setAttribute_bb_type(PartAttribute(CustomTypes::AttributeBBType, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeBBAxisType]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBAxisType] <= 0)
-            m_property_handler->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
+            m_property_container->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeBBAxisLength]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBAxisLength] <= 0)
-            m_property_handler->setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength, "-1"));
+            m_property_container->setAttribute_bb_axis_length(PartAttribute(CustomTypes::AttributeBBAxisLength, "-1"));
         break;
     }
     case CustomTypes::PartGrip:
@@ -753,162 +533,162 @@ void ModelHandler::clean_properties(CustomTypes::PartType part_type)
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMinSprocketTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMinSprocketTooth] <= 0)
-            m_property_handler->setAttribute_min_sprocket_tooth(PartAttribute(CustomTypes::AttributeMinSprocketTooth, "-1"));
+            m_property_container->setAttribute_min_sprocket_tooth(PartAttribute(CustomTypes::AttributeMinSprocketTooth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMaxSprocketTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMaxSprocketTooth] <= 0)
-            m_property_handler->setAttribute_max_sprocket_tooth(PartAttribute(CustomTypes::AttributeMaxSprocketTooth, "-1"));
+            m_property_container->setAttribute_max_sprocket_tooth(PartAttribute(CustomTypes::AttributeMaxSprocketTooth, "-1"));
         break;
     }
     case CustomTypes::PartChain:
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         break;
     }
     case CustomTypes::PartRearDerailleur:
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMinDerailleurTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMinDerailleurTooth] <= 0)
-            m_property_handler->setAttribute_min_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinDerailleurTooth, "-1"));
+            m_property_container->setAttribute_min_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinDerailleurTooth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMaxDerailleurTooth] <= 0)
-            m_property_handler->setAttribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth, "-1"));
+            m_property_container->setAttribute_max_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxDerailleurTooth, "-1"));
         break;
     }
     case CustomTypes::PartFrontDerailleur:
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMinFrontDerailleurTooth] <= 0)
-            m_property_handler->setAttribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth, "-1"));
+            m_property_container->setAttribute_min_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMinFrontDerailleurTooth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMaxFrontDerailleurTooth] <= 0)
-            m_property_handler->setAttribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth, "-1"));
+            m_property_container->setAttribute_max_front_derailleur_tooth(PartAttribute(CustomTypes::AttributeMaxFrontDerailleurTooth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeCrankSpeed] <= 0)
-            m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
+            m_property_container->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeChainLine]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainLine] <= 0)
-            m_property_handler->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1"));
+            m_property_container->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDerailleurMount] <= 0)
-            m_property_handler->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
+            m_property_container->setAttribute_front_derailleur_mount(PartAttribute(CustomTypes::AttributeFrontDerailleurMount, "-1"));
         break;
     }
     case CustomTypes::PartCrank:
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeCrankSpeed] <= 0)
-            m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
+            m_property_container->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeChainLine]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainLine] <= 0)
-            m_property_handler->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1"));
+            m_property_container->setAttribute_chain_line(PartAttribute(CustomTypes::AttributeChainLine, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeMaxCrankTooth]--;
         if (m_map_attribute_counter[CustomTypes::AttributeMaxCrankTooth] <= 0)
-            m_property_handler->setAttribute_max_crank_tooth(PartAttribute(CustomTypes::AttributeMaxCrankTooth, "-1"));
+            m_property_container->setAttribute_max_crank_tooth(PartAttribute(CustomTypes::AttributeMaxCrankTooth, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeBBAxisType]--;
         if (m_map_attribute_counter[CustomTypes::AttributeBBAxisType] <= 0)
-            m_property_handler->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
+            m_property_container->setAttribute_bb_axis_type(PartAttribute(CustomTypes::AttributeBBAxisType, "-1"));
         break;
     }
     case CustomTypes::PartFrontShifter:
     {
         m_map_attribute_counter[CustomTypes::AttributeCrankSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeCrankSpeed] <= 0)
-            m_property_handler->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
+            m_property_container->setAttribute_crank_speed(PartAttribute(CustomTypes::AttributeCrankSpeed, "-1"));
         break;
     }
     case CustomTypes::PartRearShifter:
     {
         m_map_attribute_counter[CustomTypes::AttributeChainSpeed]--;
         if (m_map_attribute_counter[CustomTypes::AttributeChainSpeed] <= 0)
-            m_property_handler->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
+            m_property_container->setAttribute_chain_speed(PartAttribute(CustomTypes::AttributeChainSpeed, "-1"));
         break;
     }
     case CustomTypes::PartFrontDisc:
     {
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscSize] <= 0)
-            m_property_handler->setAttribute_front_disc_size(PartAttribute(CustomTypes::AttributeFrontDiscSize, "-1"));
+            m_property_container->setAttribute_front_disc_size(PartAttribute(CustomTypes::AttributeFrontDiscSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscMount] <= 0)
-            m_property_handler->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount, "-1"));
+            m_property_container->setAttribute_front_disc_mount(PartAttribute(CustomTypes::AttributeFrontDiscMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake] <= 0)
-            m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
+            m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
         break;
     }
     case CustomTypes::PartRearDisc:
     {
         m_map_attribute_counter[CustomTypes::AttributeRearDiscSize]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscSize] <= 0)
-            m_property_handler->setAttribute_rear_disc_size(PartAttribute(CustomTypes::AttributeRearDiscSize, "-1"));
+            m_property_container->setAttribute_rear_disc_size(PartAttribute(CustomTypes::AttributeRearDiscSize, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeRearDiscMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscMount] <= 0)
-            m_property_handler->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1"));
+            m_property_container->setAttribute_rear_disc_mount(PartAttribute(CustomTypes::AttributeRearDiscMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
-            m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
+            m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
         break;
     }
     case CustomTypes::PartFrontDiscBrakeSet:
     {
         m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeFrontDiscBrakeMount] <= 0)
-            m_property_handler->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
+            m_property_container->setAttribute_front_disc_brake_mount(PartAttribute(CustomTypes::AttributeFrontDiscBrakeMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake] <= 0)
-            m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
+            m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
         break;
     }
     case CustomTypes::PartRearDiscBrakeSet:
     {
         m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount]--;
         if (m_map_attribute_counter[CustomTypes::AttributeRearDiscBrakeMount] <= 0)
-            m_property_handler->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
+            m_property_container->setAttribute_rear_disc_brake_mount(PartAttribute(CustomTypes::AttributeRearDiscBrakeMount, "-1"));
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
-            m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
+            m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
         break;
     }
     case CustomTypes::PartFrontVBrake:
     {
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake] <= 0)
-            m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
+            m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
         break;
     }
     case CustomTypes::PartRearVBrake:
     {
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
-            m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
+            m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
         break;
     }
     case CustomTypes::PartFrontLever:
     {
         m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedFrontBrake] <= 0)
-            m_property_handler->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
+            m_property_container->setSelected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1"));
         break;
     }
     case CustomTypes::PartRearLever:
     {
         m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake]--;
         if (m_map_attribute_counter[CustomTypes::AttributeSelectedRearBrake] <= 0)
-            m_property_handler->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
+            m_property_container->setSelected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"));
         break;
     }
     }
@@ -947,180 +727,180 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
     switch(part_type){
     case CustomTypes::PartFork:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
-        if (m_property_handler->attribute_axle_type_front().second != "-1"){
-            filter_properties_list << QString("axle_type_front = '%1'").arg(m_property_handler->attribute_axle_type_front().second);
+        if (m_property_container->attribute_axle_type_front().second != "-1"){
+            filter_properties_list << QString("axle_type_front = '%1'").arg(m_property_container->attribute_axle_type_front().second);
         }
-        if (m_property_handler->attribute_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("steerer_tube_diameter = '%1'").arg(m_property_handler->attribute_steerer_tube_diameter().second);
+        if (m_property_container->attribute_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("steerer_tube_diameter = '%1'").arg(m_property_container->attribute_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_headset().second != "-1"){
-            filter_properties_list << QString("steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM headset_compatibility WHERE shis = '%1')").arg(m_property_handler->attribute_headset().second);
+        if (m_property_container->attribute_headset().second != "-1"){
+            filter_properties_list << QString("steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM headset_compatibility WHERE shis = '%1')").arg(m_property_container->attribute_headset().second);
         }
-        if (m_property_handler->attribute_stem_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1')").arg(m_property_handler->attribute_stem_steerer_tube_diameter().second);
+        if (m_property_container->attribute_stem_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1')").arg(m_property_container->attribute_stem_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_front_disc_brake_mount().second != "-1"){
-            filter_properties_list << QString("disc_brake_mount = '%1'").arg(m_property_handler->attribute_front_disc_brake_mount().second);
+        if (m_property_container->attribute_front_disc_brake_mount().second != "-1"){
+            filter_properties_list << QString("disc_brake_mount = '%1'").arg(m_property_container->attribute_front_disc_brake_mount().second);
         }
-        if (m_property_handler->selected_front_brake().second == "disc"){
+        if (m_property_container->selected_front_brake().second == "disc"){
             filter_properties_list << QString("disc_brake_mount IS NOT NULL");
-        } else if (m_property_handler->selected_front_brake().second == "vbrake") {
+        } else if (m_property_container->selected_front_brake().second == "vbrake") {
             filter_properties_list << QString("v_brake_mount IS NOT NULL");
         }
         break;
     }
     case CustomTypes::PartFrame:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
-        if (m_property_handler->attribute_axle_type_rear().second != "-1"){
-            filter_properties_list << QString("axle_type_rear = '%1'").arg(m_property_handler->attribute_axle_type_rear().second);
+        if (m_property_container->attribute_axle_type_rear().second != "-1"){
+            filter_properties_list << QString("axle_type_rear = '%1'").arg(m_property_container->attribute_axle_type_rear().second);
         }
-        if (m_property_handler->attribute_headset().second != "-1"){
-            filter_properties_list << QString("shis = '%1'").arg(m_property_handler->attribute_headset().second);
+        if (m_property_container->attribute_headset().second != "-1"){
+            filter_properties_list << QString("shis = '%1'").arg(m_property_container->attribute_headset().second);
         }
-        if (m_property_handler->attribute_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_handler->attribute_steerer_tube_diameter().second);
+        if (m_property_container->attribute_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_container->attribute_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_stem_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(m_property_handler->attribute_stem_steerer_tube_diameter().second);
+        if (m_property_container->attribute_stem_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(m_property_container->attribute_stem_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_seatpost_diameter().second != "-1"){
-            filter_properties_list << QString("seatpost_diameter = '%1'").arg(m_property_handler->attribute_seatpost_diameter().second);
+        if (m_property_container->attribute_seatpost_diameter().second != "-1"){
+            filter_properties_list << QString("seatpost_diameter = '%1'").arg(m_property_container->attribute_seatpost_diameter().second);
         }
-        if (m_property_handler->attribute_bb_type().second != "-1"){
-            filter_properties_list << QString("bb_type = '%1'").arg(m_property_handler->attribute_bb_type().second);
+        if (m_property_container->attribute_bb_type().second != "-1"){
+            filter_properties_list << QString("bb_type = '%1'").arg(m_property_container->attribute_bb_type().second);
         }
-        if (m_property_handler->attribute_front_derailleur_mount().second != "-1"){
-            filter_properties_list << QString("front_derailleur_mount = '%1'").arg(m_property_handler->attribute_front_derailleur_mount().second);
+        if (m_property_container->attribute_front_derailleur_mount().second != "-1"){
+            filter_properties_list << QString("front_derailleur_mount = '%1'").arg(m_property_container->attribute_front_derailleur_mount().second);
         }
-        if (m_property_handler->attribute_rear_disc_brake_mount().second != "-1"){
-            filter_properties_list << QString("disc_brake_mount = '%1'").arg(m_property_handler->attribute_rear_disc_brake_mount().second);
+        if (m_property_container->attribute_rear_disc_brake_mount().second != "-1"){
+            filter_properties_list << QString("disc_brake_mount = '%1'").arg(m_property_container->attribute_rear_disc_brake_mount().second);
         }
-        if (m_property_handler->selected_rear_brake().second == "disc"){
+        if (m_property_container->selected_rear_brake().second == "disc"){
             filter_properties_list << QString("disc_brake_mount IS NOT NULL");
-        } else if (m_property_handler->selected_rear_brake().second == "vbrake") {
+        } else if (m_property_container->selected_rear_brake().second == "vbrake") {
             filter_properties_list << QString("v_brake_mount IS NOT NULL");
         }
         break;
     }
     case CustomTypes::PartFrontWheel:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
-        if (m_property_handler->attribute_axle_type_front().second != "-1"){
-            filter_properties_list << QString("axle_type_front = '%1'").arg(m_property_handler->attribute_axle_type_front().second);
+        if (m_property_container->attribute_axle_type_front().second != "-1"){
+            filter_properties_list << QString("axle_type_front = '%1'").arg(m_property_container->attribute_axle_type_front().second);
         }
-        if (m_property_handler->attribute_front_disc_mount().second != "-1"){
-            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_handler->attribute_front_disc_mount().second);
+        if (m_property_container->attribute_front_disc_mount().second != "-1"){
+            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_container->attribute_front_disc_mount().second);
         }
-        if (m_property_handler->selected_front_brake().second == "disc"){
+        if (m_property_container->selected_front_brake().second == "disc"){
             filter_properties_list << QString("disc_mount_system IS NOT NULL");
-        } else if (m_property_handler->selected_front_brake().second == "vbrake") {
+        } else if (m_property_container->selected_front_brake().second == "vbrake") {
             filter_properties_list << QString("v_brake_mount IS NOT NULL");
         }
         break;
     }
     case CustomTypes::PartRearWheel:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
-        if (m_property_handler->attribute_axle_type_rear().second != "-1"){
-            filter_properties_list << QString("axle_type_rear = '%1'").arg(m_property_handler->attribute_axle_type_rear().second);
+        if (m_property_container->attribute_axle_type_rear().second != "-1"){
+            filter_properties_list << QString("axle_type_rear = '%1'").arg(m_property_container->attribute_axle_type_rear().second);
         }
-        if (m_property_handler->attribute_rear_disc_mount().second != "-1"){
-            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_handler->attribute_rear_disc_mount().second);
+        if (m_property_container->attribute_rear_disc_mount().second != "-1"){
+            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_container->attribute_rear_disc_mount().second);
         }
-        if (m_property_handler->selected_rear_brake().second == "disc"){
+        if (m_property_container->selected_rear_brake().second == "disc"){
             filter_properties_list << QString("disc_mount_system IS NOT NULL");
-        } else if (m_property_handler->selected_rear_brake().second == "vbrake") {
+        } else if (m_property_container->selected_rear_brake().second == "vbrake") {
             filter_properties_list << QString("v_brake_mount IS NOT NULL");
         }
         break;
     }
     case CustomTypes::PartHeadset:
     {
-        if (m_property_handler->attribute_headset().second != "-1"){
-            filter_properties_list << QString("shis = '%1'").arg(m_property_handler->attribute_headset().second);
+        if (m_property_container->attribute_headset().second != "-1"){
+            filter_properties_list << QString("shis = '%1'").arg(m_property_container->attribute_headset().second);
         }
-        if (m_property_handler->attribute_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_handler->attribute_steerer_tube_diameter().second);
+        if (m_property_container->attribute_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_container->attribute_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_stem_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(m_property_handler->attribute_stem_steerer_tube_diameter().second);
+        if (m_property_container->attribute_stem_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("shis IN (SELECT shis FROM headset_compatibility WHERE steerer_tube_diameter IN (SELECT steerer_tube_diameter FROM steerer_tube_diameter_compatibility WHERE stem_tube_diameter = '%1'))").arg(m_property_container->attribute_stem_steerer_tube_diameter().second);
         }
         break;
     }
     case CustomTypes::PartHandlebar:
     {
-        if (m_property_handler->attribute_handlebar_diameter().second != "-1"){
-            filter_properties_list << QString("handlebar_diameter = '%1'").arg(m_property_handler->attribute_handlebar_diameter().second);
+        if (m_property_container->attribute_handlebar_diameter().second != "-1"){
+            filter_properties_list << QString("handlebar_diameter = '%1'").arg(m_property_container->attribute_handlebar_diameter().second);
         }
         break;
     }
     case CustomTypes::PartStem:
     {
-        if (m_property_handler->attribute_handlebar_diameter().second != "-1"){
-            filter_properties_list << QString("handlebar_diameter = '%1'").arg(m_property_handler->attribute_handlebar_diameter().second);
+        if (m_property_container->attribute_handlebar_diameter().second != "-1"){
+            filter_properties_list << QString("handlebar_diameter = '%1'").arg(m_property_container->attribute_handlebar_diameter().second);
         }
-        if (m_property_handler->attribute_steerer_tube_diameter().second != "-1"){
-            filter_properties_list << QString("steerer_tube_diameter IN (SELECT stem_tube_diameter FROM steerer_tube_diameter_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_handler->attribute_steerer_tube_diameter().second);
+        if (m_property_container->attribute_steerer_tube_diameter().second != "-1"){
+            filter_properties_list << QString("steerer_tube_diameter IN (SELECT stem_tube_diameter FROM steerer_tube_diameter_compatibility WHERE steerer_tube_diameter = '%1')").arg(m_property_container->attribute_steerer_tube_diameter().second);
         }
-        if (m_property_handler->attribute_headset().second != "-1"){
-            filter_properties_list << QString("steerer_tube_diameter IN (SELECT stem_tube_diameter FROM steerer_tube_diameter_compatibility WHERE steerer_tube_diameter in (SELECT steerer_tube_diameter FROM headset_compatibility WHERE shis = '%1'))").arg(m_property_handler->attribute_headset().second);
+        if (m_property_container->attribute_headset().second != "-1"){
+            filter_properties_list << QString("steerer_tube_diameter IN (SELECT stem_tube_diameter FROM steerer_tube_diameter_compatibility WHERE steerer_tube_diameter in (SELECT steerer_tube_diameter FROM headset_compatibility WHERE shis = '%1'))").arg(m_property_container->attribute_headset().second);
         }
         break;
     }
     case CustomTypes::PartSeatpost:
     {
-        if (m_property_handler->attribute_seatpost_diameter().second != "-1"){
-            filter_properties_list << QString("seatpost_diameter = '%1'").arg(m_property_handler->attribute_seatpost_diameter().second);
+        if (m_property_container->attribute_seatpost_diameter().second != "-1"){
+            filter_properties_list << QString("seatpost_diameter = '%1'").arg(m_property_container->attribute_seatpost_diameter().second);
         }
-        if (m_property_handler->attribute_saddle_mounting().second != "-1"){
-            filter_properties_list << QString("saddle_mounting = '%1'").arg(m_property_handler->attribute_saddle_mounting().second);
+        if (m_property_container->attribute_saddle_mounting().second != "-1"){
+            filter_properties_list << QString("saddle_mounting = '%1'").arg(m_property_container->attribute_saddle_mounting().second);
         }
         break;
     }
     case CustomTypes::PartSaddle:
     {
-        if (m_property_handler->attribute_saddle_mounting().second != "-1"){
-            filter_properties_list << QString("saddle_mounting = '%1'").arg(m_property_handler->attribute_saddle_mounting().second);
+        if (m_property_container->attribute_saddle_mounting().second != "-1"){
+            filter_properties_list << QString("saddle_mounting = '%1'").arg(m_property_container->attribute_saddle_mounting().second);
         }
         break;
     }
     case CustomTypes::PartTire:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
         break;
     }
     case CustomTypes::PartInnerTube:
     {
-        if (m_property_handler->attribute_wheel_size().second != "-1"){
-            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_handler->attribute_wheel_size().second);
+        if (m_property_container->attribute_wheel_size().second != "-1"){
+            filter_properties_list << QString("wheel_size = '%1'").arg(m_property_container->attribute_wheel_size().second);
         }
-        if (m_property_handler->attribute_tire_width().second != "-1"){
-            filter_properties_list << QString("min_tire_width <= '%1' AND max_tire_width >= '%1'").arg(m_property_handler->attribute_tire_width().second);
+        if (m_property_container->attribute_tire_width().second != "-1"){
+            filter_properties_list << QString("min_tire_width <= '%1' AND max_tire_width >= '%1'").arg(m_property_container->attribute_tire_width().second);
         }
         break;
     }
     case CustomTypes::PartBB:
     {
-        if (m_property_handler->attribute_bb_type().second != "-1"){
-            filter_properties_list << QString("bb_type = '%1'").arg(m_property_handler->attribute_bb_type().second);
+        if (m_property_container->attribute_bb_type().second != "-1"){
+            filter_properties_list << QString("bb_type = '%1'").arg(m_property_container->attribute_bb_type().second);
         }
-        if (m_property_handler->attribute_bb_axis_type().second != "-1"){
-            filter_properties_list << QString("bb_axis_type = '%1'").arg(m_property_handler->attribute_bb_axis_type().second);
+        if (m_property_container->attribute_bb_axis_type().second != "-1"){
+            filter_properties_list << QString("bb_axis_type = '%1'").arg(m_property_container->attribute_bb_axis_type().second);
         }
-        if (m_property_handler->attribute_bb_axis_length().second != "-1" && m_property_handler->attribute_bb_axis_length().second != "0"){
-            filter_properties_list << QString("bb_axis_length = '%1'").arg(m_property_handler->attribute_bb_axis_length().second);
+        if (m_property_container->attribute_bb_axis_length().second != "-1" && m_property_container->attribute_bb_axis_length().second != "0"){
+            filter_properties_list << QString("bb_axis_length = '%1'").arg(m_property_container->attribute_bb_axis_length().second);
         }
         break;
     }
@@ -1130,123 +910,123 @@ QString ModelHandler::create_filter(CustomTypes::PartType part_type)
     }
     case CustomTypes::PartCassette:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
-        if (m_property_handler->attribute_min_derailleur_tooth().second != "-1"){
-            filter_properties_list << QString("min_sprocket_tooth >= '%1'").arg(m_property_handler->attribute_min_derailleur_tooth().second);
+        if (m_property_container->attribute_min_derailleur_tooth().second != "-1"){
+            filter_properties_list << QString("min_sprocket_tooth >= '%1'").arg(m_property_container->attribute_min_derailleur_tooth().second);
         }
-        if (m_property_handler->attribute_max_derailleur_tooth().second != "-1"){
-            filter_properties_list << QString("max_sprocket_tooth <= '%1'").arg(m_property_handler->attribute_max_derailleur_tooth().second);
+        if (m_property_container->attribute_max_derailleur_tooth().second != "-1"){
+            filter_properties_list << QString("max_sprocket_tooth <= '%1'").arg(m_property_container->attribute_max_derailleur_tooth().second);
         }
         break;
     }
     case CustomTypes::PartChain:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
         break;
     }
     case CustomTypes::PartRearDerailleur:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
-        if (m_property_handler->attribute_min_sprocket_tooth().second != "-1"){
-            filter_properties_list << QString("min_sprocket_tooth <= '%1'").arg(m_property_handler->attribute_min_sprocket_tooth().second);
+        if (m_property_container->attribute_min_sprocket_tooth().second != "-1"){
+            filter_properties_list << QString("min_sprocket_tooth <= '%1'").arg(m_property_container->attribute_min_sprocket_tooth().second);
         }
-        if (m_property_handler->attribute_max_sprocket_tooth().second != "-1"){
-            filter_properties_list << QString("max_sprocket_tooth >= '%1'").arg(m_property_handler->attribute_max_sprocket_tooth().second);
+        if (m_property_container->attribute_max_sprocket_tooth().second != "-1"){
+            filter_properties_list << QString("max_sprocket_tooth >= '%1'").arg(m_property_container->attribute_max_sprocket_tooth().second);
         }
         break;
     }
     case CustomTypes::PartFrontDerailleur:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
-        if (m_property_handler->attribute_crank_speed().second != "-1"){
-            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_handler->attribute_crank_speed().second);
+        if (m_property_container->attribute_crank_speed().second != "-1"){
+            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_container->attribute_crank_speed().second);
         }
-        if (m_property_handler->attribute_chain_line().second != "-1"){
-            filter_properties_list << QString("chain_line = '%1'").arg(m_property_handler->attribute_chain_line().second);
+        if (m_property_container->attribute_chain_line().second != "-1"){
+            filter_properties_list << QString("chain_line = '%1'").arg(m_property_container->attribute_chain_line().second);
         }
-        if (m_property_handler->attribute_max_crank_tooth().second != "-1"){
-            filter_properties_list << QString("max_chainring_tooth >= '%1' AND min_chainring_tooth <= '%1'").arg(m_property_handler->attribute_max_crank_tooth().second);
+        if (m_property_container->attribute_max_crank_tooth().second != "-1"){
+            filter_properties_list << QString("max_chainring_tooth >= '%1' AND min_chainring_tooth <= '%1'").arg(m_property_container->attribute_max_crank_tooth().second);
         }
-        if (m_property_handler->attribute_front_derailleur_mount().second != "-1"){
-            filter_properties_list << QString("front_derailleur_mount = '%1'").arg(m_property_handler->attribute_front_derailleur_mount().second);
+        if (m_property_container->attribute_front_derailleur_mount().second != "-1"){
+            filter_properties_list << QString("front_derailleur_mount = '%1'").arg(m_property_container->attribute_front_derailleur_mount().second);
         }
         break;
     }
     case CustomTypes::PartCrank:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
-        if (m_property_handler->attribute_crank_speed().second != "-1"){
-            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_handler->attribute_crank_speed().second);
+        if (m_property_container->attribute_crank_speed().second != "-1"){
+            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_container->attribute_crank_speed().second);
         }
-        if (m_property_handler->attribute_chain_line().second != "-1"){
-            filter_properties_list << QString("chain_line = '%1'").arg(m_property_handler->attribute_chain_line().second);
+        if (m_property_container->attribute_chain_line().second != "-1"){
+            filter_properties_list << QString("chain_line = '%1'").arg(m_property_container->attribute_chain_line().second);
         }
-        if (m_property_handler->attribute_bb_axis_type().second != "-1"){
-            filter_properties_list << QString("bb_axis_type = '%1'").arg(m_property_handler->attribute_bb_axis_type().second);
+        if (m_property_container->attribute_bb_axis_type().second != "-1"){
+            filter_properties_list << QString("bb_axis_type = '%1'").arg(m_property_container->attribute_bb_axis_type().second);
         }
-        if (m_property_handler->attribute_max_front_derailleur_tooth().second != "-1"){
-            filter_properties_list << QString("max_chainring_tooth <= '%1'").arg(m_property_handler->attribute_max_front_derailleur_tooth().second);
+        if (m_property_container->attribute_max_front_derailleur_tooth().second != "-1"){
+            filter_properties_list << QString("max_chainring_tooth <= '%1'").arg(m_property_container->attribute_max_front_derailleur_tooth().second);
         }
-        if (m_property_handler->attribute_min_front_derailleur_tooth().second != "-1"){
-            filter_properties_list << QString("max_chainring_tooth >= '%1'").arg(m_property_handler->attribute_min_front_derailleur_tooth().second);
+        if (m_property_container->attribute_min_front_derailleur_tooth().second != "-1"){
+            filter_properties_list << QString("max_chainring_tooth >= '%1'").arg(m_property_container->attribute_min_front_derailleur_tooth().second);
         }
         break;
     }
     case CustomTypes::PartFrontShifter:
     {
-        if (m_property_handler->attribute_crank_speed().second != "-1"){
-            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_handler->attribute_crank_speed().second);
+        if (m_property_container->attribute_crank_speed().second != "-1"){
+            filter_properties_list << QString("crank_speed = '%1'").arg(m_property_container->attribute_crank_speed().second);
         }
         break;
     }
     case CustomTypes::PartRearShifter:
     {
-        if (m_property_handler->attribute_chain_speed().second != "-1"){
-            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_handler->attribute_chain_speed().second);
+        if (m_property_container->attribute_chain_speed().second != "-1"){
+            filter_properties_list << QString("chain_speed = '%1'").arg(m_property_container->attribute_chain_speed().second);
         }
         break;
     }
     case CustomTypes::PartFrontDisc:
     {
-        if (m_property_handler->attribute_front_disc_size().second != "-1"){
-            filter_properties_list << QString("disc_brake_size = '%1'").arg(m_property_handler->attribute_front_disc_size().second);
+        if (m_property_container->attribute_front_disc_size().second != "-1"){
+            filter_properties_list << QString("disc_brake_size = '%1'").arg(m_property_container->attribute_front_disc_size().second);
         }
-        if (m_property_handler->attribute_front_disc_mount().second != "-1" && !m_property_handler->attribute_front_disc_mount().second.isEmpty()){
-            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_handler->attribute_front_disc_mount().second);
+        if (m_property_container->attribute_front_disc_mount().second != "-1" && !m_property_container->attribute_front_disc_mount().second.isEmpty()){
+            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_container->attribute_front_disc_mount().second);
         }
         break;
     }
     case CustomTypes::PartRearDisc:
     {
-        if (m_property_handler->attribute_rear_disc_size().second != "-1"){
-            filter_properties_list << QString("disc_brake_size = '%1'").arg(m_property_handler->attribute_rear_disc_size().second);
+        if (m_property_container->attribute_rear_disc_size().second != "-1"){
+            filter_properties_list << QString("disc_brake_size = '%1'").arg(m_property_container->attribute_rear_disc_size().second);
         }
-        if (m_property_handler->attribute_rear_disc_mount().second != "-1"){
-            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_handler->attribute_rear_disc_mount().second);
+        if (m_property_container->attribute_rear_disc_mount().second != "-1"){
+            filter_properties_list << QString("disc_mount_system = '%1'").arg(m_property_container->attribute_rear_disc_mount().second);
         }
         break;
     }
     case CustomTypes::PartFrontDiscBrakeSet:
     {
-        if (m_property_handler->attribute_front_disc_brake_mount().second != "-1" && !m_property_handler->attribute_front_disc_brake_mount().second.isEmpty()){
-            filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(m_property_handler->attribute_front_disc_brake_mount().second);
+        if (m_property_container->attribute_front_disc_brake_mount().second != "-1" && !m_property_container->attribute_front_disc_brake_mount().second.isEmpty()){
+            filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(m_property_container->attribute_front_disc_brake_mount().second);
         }
         break;
     }
     case CustomTypes::PartRearDiscBrakeSet:
     {
-        if (m_property_handler->attribute_rear_disc_brake_mount().second != "-1" && !m_property_handler->attribute_rear_disc_brake_mount().second.isEmpty()){
-            filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(m_property_handler->attribute_rear_disc_brake_mount().second);
+        if (m_property_container->attribute_rear_disc_brake_mount().second != "-1" && !m_property_container->attribute_rear_disc_brake_mount().second.isEmpty()){
+            filter_properties_list << QString("disc_brake_mount_system = '%1'").arg(m_property_container->attribute_rear_disc_brake_mount().second);
         }
         break;
     }
@@ -1324,7 +1104,7 @@ void ModelHandler::check_disc_allowed(PartAttribute part_attribute)
             emit block_part(CustomTypes::PartFrontDisc);
             emit block_part(CustomTypes::PartFrontDiscBrakeSet);
         } else {
-            if(m_property_handler->selected_front_brake().second != "vbrake"){
+            if(m_property_container->selected_front_brake().second != "vbrake"){
                 emit unlock_part(CustomTypes::PartFrontDisc);
                 emit unlock_part(CustomTypes::PartFrontDiscBrakeSet);
             }
@@ -1336,14 +1116,14 @@ void ModelHandler::check_disc_allowed(PartAttribute part_attribute)
             emit block_part(CustomTypes::PartRearDisc);
             emit block_part(CustomTypes::PartRearDiscBrakeSet);
         } else {
-            if(m_property_handler->selected_rear_brake().second != "vbrake"){
+            if(m_property_container->selected_rear_brake().second != "vbrake"){
                 emit unlock_part(CustomTypes::PartRearDisc);
                 emit unlock_part(CustomTypes::PartRearDiscBrakeSet);
             }
         }
         break;
     case CustomTypes::AttributeFrontVBrakeMount:
-        if ((part_attribute.second == "1" || part_attribute.second == "-1") && m_property_handler->selected_front_brake().second != "disc") {
+        if ((part_attribute.second == "1" || part_attribute.second == "-1") && m_property_container->selected_front_brake().second != "disc") {
             emit unlock_part(CustomTypes::PartFrontVBrake);
             emit unlock_part(CustomTypes::PartFrontLever);
         } else {

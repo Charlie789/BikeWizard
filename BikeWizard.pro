@@ -12,7 +12,8 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     modelhandler.cpp \
-    propertycontainter.cpp
+    propertycontainter.cpp \
+    propertymanager.cpp
 
 HEADERS += \
     backgroundcolordelegate.h \
@@ -21,7 +22,8 @@ HEADERS += \
     dbconnector.h \
     mainwindow.h \
     modelhandler.h \
-    propertycontainter.h
+    propertycontainter.h \
+    propertymanager.h
 
 FORMS += \
     mainwindow.ui

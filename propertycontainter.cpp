@@ -37,7 +37,6 @@ PropertyContainer::PropertyContainer(QObject *parent) :
 
     m_selected_front_brake(PartAttribute(CustomTypes::AttributeSelectedFrontBrake, "-1")),
     m_selected_rear_brake(PartAttribute(CustomTypes::AttributeSelectedRearBrake, "-1"))
-
 {
     connect(this, &PropertyContainer::attribute_wheel_sizeChanged, this, &PropertyContainer::property_changed);
     connect(this, &PropertyContainer::attribute_axle_type_frontChanged, this, &PropertyContainer::property_changed);

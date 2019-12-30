@@ -54,7 +54,7 @@ private:
 
     QStandardItemModel m_model_selected_parts;
 
-    PropertyContainer* m_property_handler;
+    PropertyContainer* m_property_container;
 
 signals:
     void map_part_table_ready(QMap<CustomTypes::PartType, QString> map_part);
@@ -62,6 +62,7 @@ signals:
     void part_deleted(CustomTypes::PartType part_type);
     void block_part(CustomTypes::PartType part_type);
     void unlock_part(CustomTypes::PartType part_type);
+    void property_attribute_list_ready(QList<PartAttribute>);
 
 public slots:
     void init_db();

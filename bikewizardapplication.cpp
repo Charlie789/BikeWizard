@@ -15,10 +15,12 @@ BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
     connect(&m_model_handler, &ModelHandler::selected_parts_model_ready, &w, &MainWindow::set_selected_parts_model);
     connect(&m_model_handler, &ModelHandler::block_part, &w, &MainWindow::set_button_unavailable);
     connect(&m_model_handler, &ModelHandler::unlock_part, &w, &MainWindow::set_button_available);
-    connect(this, &BikeWizardApplication::property_handler_ready, &m_model_handler, &ModelHandler::init_properties);
-    connect(&m_prop_handler, &PropertyContainer::property_changed, &m_model_handler, &ModelHandler::filter_handler);
-    connect(&m_prop_handler, &PropertyContainer::brake_property_changed, &m_model_handler, &ModelHandler::check_disc_allowed);
+    connect(&m_model_handler, &ModelHandler::property_attribute_list_ready, &m_property_manager, &PropertyManager::set_properties);
+    connect(this, &BikeWizardApplication::property_container_ready, &m_model_handler, &ModelHandler::init_properties);
+    connect(this, &BikeWizardApplication::property_container_ready, &m_property_manager, &PropertyManager::init_properties);
+    connect(&m_property_container, &PropertyContainer::property_changed, &m_model_handler, &ModelHandler::filter_handler);
+    connect(&m_property_container, &PropertyContainer::brake_property_changed, &m_model_handler, &ModelHandler::check_disc_allowed);
 
     db.connect_to_db();
-    emit property_handler_ready(&m_prop_handler);
+    emit property_container_ready(&m_property_container);
 }
