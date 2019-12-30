@@ -6,6 +6,7 @@
 #include <QObject>
 #include "dbconnector.h"
 #include "modelhandler.h"
+#include "propertycontainter.h"
 
 class BikeWizardApplication : public QApplication
 {
@@ -17,6 +18,10 @@ private:
     MainWindow w;
     DbConnector db;
     ModelHandler m_model_handler;
+    PropertyContainer m_prop_handler;
+
+signals:
+    void property_handler_ready(PropertyContainer* prop);
 
 };
 

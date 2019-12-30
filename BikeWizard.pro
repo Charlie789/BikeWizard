@@ -11,7 +11,8 @@ SOURCES += \
     dbconnector.cpp \
     main.cpp \
     mainwindow.cpp \
-    modelhandler.cpp
+    modelhandler.cpp \
+    propertycontainter.cpp
 
 HEADERS += \
     backgroundcolordelegate.h \
@@ -19,7 +20,8 @@ HEADERS += \
     customtypes.h \
     dbconnector.h \
     mainwindow.h \
-    modelhandler.h
+    modelhandler.h \
+    propertycontainter.h
 
 FORMS += \
     mainwindow.ui
