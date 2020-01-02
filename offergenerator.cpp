@@ -26,11 +26,17 @@ void OfferGenerator::generate_offer()
                            "<hr>"
                            "%4"
                            "<hr>"
-                           "<p align=right>Koszt całkowity: %3 zł</p>")
+                           "<p align=right>Koszt całkowity: %3 zł</p>"
+                           "<br>"
+                           "<br>"
+                           "<br>"
+                           "<br>"
+                           "%5")
             .arg(generate_offer_frame())
             .arg(generate_parts_header())
             .arg(total_cost)
-            .arg(generate_part_rows());
+            .arg(generate_part_rows())
+            .arg(generate_sign_space());
     QTextDocument document;
     document.setHtml(html);
 
@@ -90,9 +96,6 @@ QString OfferGenerator::generate_offer_frame()
                                 "<td style='padding:1px '>"
                                 "<table width= 100% style='background-color:#fff;'>"
                                 "<tr>"
-                                "<td>Oferta</td>"
-                                "</tr>"
-                                "<tr>"
                                 "<td>Numer oferty: 1</td>"
                                 "</tr>"
                                 "<tr>"
@@ -103,4 +106,21 @@ QString OfferGenerator::generate_offer_frame()
                                 "</tbody>"
                                 "</table>").arg(QDate::currentDate().toString("dd.MM.yyyy"));
     return offer_frame;
+}
+
+QString OfferGenerator::generate_sign_space()
+{
+    QString sign_space = QString(
+                                "<table width=100%>"
+                                "<tr>"
+                                "<td width = 50% align = left>........................................</td>"
+                                "<td width = 50% align = right>........................................</td>"
+                                "</tr>"
+                                "<tr>"
+                                "<td width = 50% align = left>Podpis pracownika</td>"
+                                "<td width = 50% align = right>Podpis klienta</td>"
+                                "</tr>"
+                                "</table>");
+
+    return sign_space;
 }
