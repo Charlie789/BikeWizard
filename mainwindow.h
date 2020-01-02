@@ -81,11 +81,13 @@ private slots:
     void on_accept_pushbutton_clicked();
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
     void on_back_pushbutton_clicked();
+    void on_generate_offer_pushbutton_clicked();
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
     void part_has_to_be_remove(CustomTypes::PartType part_type);
     void unlock_part(CustomTypes::PartType part_type);
     void block_part(CustomTypes::PartType part_type);
+    void generate_offer_pushbutton_clicked();
 };
 #endif // MAINWINDOW_H

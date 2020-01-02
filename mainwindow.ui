@@ -30,7 +30,7 @@
         <x>0</x>
         <y>40</y>
         <width>751</width>
-        <height>461</height>
+        <height>421</height>
        </rect>
       </property>
       <property name="selectionMode">
@@ -38,6 +38,19 @@
       </property>
       <property name="selectionBehavior">
        <enum>QAbstractItemView::SelectRows</enum>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="generate_offer_pushbutton">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>460</y>
+        <width>101</width>
+        <height>25</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Generuj ofertę</string>
       </property>
      </widget>
     </widget>

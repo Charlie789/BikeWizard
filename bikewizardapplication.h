@@ -8,6 +8,7 @@
 #include "modelhandler.h"
 #include "propertycontainter.h"
 #include "propertymanager.h"
+#include "offergenerator.h"
 
 class BikeWizardApplication : public QApplication
 {
@@ -21,6 +22,7 @@ private:
     ModelHandler m_model_handler;
     PropertyContainer m_property_container;
     PropertyManager m_property_manager;
+    OfferGenerator m_offer_generator;
 
 signals:
     void property_container_ready(PropertyContainer* prop);

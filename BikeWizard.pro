@@ -1,4 +1,4 @@
-QT       += core gui sql
+QT       += core gui sql printsupport
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -12,6 +12,7 @@ SOURCES += \
     main.cpp \
     mainwindow.cpp \
     modelhandler.cpp \
+    offergenerator.cpp \
     propertycontainter.cpp \
     propertymanager.cpp
 
@@ -22,6 +23,7 @@ HEADERS += \
     dbconnector.h \
     mainwindow.h \
     modelhandler.h \
+    offergenerator.h \
     propertycontainter.h \
     propertymanager.h
 

@@ -408,3 +408,8 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
         break;
     }
 }
+
+void MainWindow::on_generate_offer_pushbutton_clicked()
+{
+    emit generate_offer_pushbutton_clicked();
+}
