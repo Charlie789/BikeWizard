@@ -701,8 +701,10 @@ void ModelHandler::set_selected_part(CustomTypes::PartType part_type, QList<QStr
         if (m_model_selected_parts.data(index_part_type).toInt() == part_type){
             QModelIndex index_part_name = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartName);
             QModelIndex index_part_id = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartID);
+            QModelIndex index_part_price = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartPrice);
             m_model_selected_parts.setData(index_part_name, list->at(1));
             m_model_selected_parts.setData(index_part_id, list->at(2));
+            m_model_selected_parts.setData(index_part_price, list->last());
         }
     }
 }
@@ -1049,12 +1051,14 @@ void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString
         QList<QStandardItem *> rowData;
         rowData << new QStandardItem(map_part.value(e));
         rowData << new QStandardItem("Nie wybrano części");
+        rowData << new QStandardItem("0");
         rowData << new QStandardItem(QString("%1").arg(e));
         rowData << new QStandardItem("-1");
         m_model_selected_parts.appendRow(rowData);
         m_model_selected_parts.setHeaderData(0, Qt::Horizontal, "Rodzaj części");
         m_model_selected_parts.setHeaderData(1, Qt::Horizontal, "Nazwa części");
-        m_model_selected_parts.setHeaderData(2, Qt::Horizontal, "");
+        m_model_selected_parts.setHeaderData(2, Qt::Horizontal, "Cena");
+        m_model_selected_parts.setHeaderData(3, Qt::Horizontal, "");
     }
     emit selected_parts_model_ready(&m_model_selected_parts);
 }

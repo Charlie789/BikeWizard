@@ -76,8 +76,16 @@ namespace TableProperties {
     namespace SelectedParts {
         enum Columns {
             ColumnPartName = 1,
+            ColumnPartPrice,
             ColumnPartType,
             ColumnPartID
+        };
+    }
+    namespace Parts {
+        enum Columns {
+            ColumnCompany,
+            ColumnName,
+            ColumnID
         };
     }
 }

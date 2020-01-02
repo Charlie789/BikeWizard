@@ -4,6 +4,7 @@
 #include <QDesktopServices>
 #include <QDebug>
 #include <QDate>
+#include "customtypes.h"
 
 OfferGenerator::OfferGenerator(QObject *parent) :
     QObject(parent),
@@ -69,6 +70,7 @@ QString OfferGenerator::generate_part_rows()
 {
     QString parts = "<table width='100%'>";
     for (int part_number = 0; part_number < m_selected_parts_model->rowCount(); part_number++){
+        double price = m_selected_parts_model->data(m_selected_parts_model->index(part_number,TableProperties::SelectedParts::ColumnPartPrice)).toDouble();
         parts += QString(
                     "<tr>"
                     "<td width='5%'>%1</td>"
@@ -78,11 +80,11 @@ QString OfferGenerator::generate_part_rows()
                     "<td width='10%'>%5</td>"
                     "</tr>")
                 .arg(part_number + 1)
-                .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, 3)).toString())
-                .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, 1)).toString())
+                .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, TableProperties::SelectedParts::ColumnPartID)).toString())
+                .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, TableProperties::SelectedParts::ColumnPartName)).toString())
                 .arg(1)
-                .arg(QString::number(part_number * 100) + " zł");
-        total_cost += part_number * 100;
+                .arg(QString::number(price) + " zł");
+        total_cost += price;
     }
     parts += "</table>";
     return parts;
