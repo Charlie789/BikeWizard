@@ -3,7 +3,7 @@
 BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
     QApplication(argc, argv)
 {
-    w.show();
+    w.showMaximized();
 
     connect(&w, &MainWindow::part_changed, &m_model_handler, &ModelHandler::set_selected_part);
     connect(&w, &MainWindow::part_changed, &m_model_handler, &ModelHandler::set_properties);

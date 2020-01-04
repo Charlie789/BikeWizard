@@ -157,7 +157,7 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
             add_select_button(i);
         }
     }
-    ui->selected_parts_tableview->setColumnWidth(TableProperties::SelectedParts::ColumnPartName, 400);
+    ui->selected_parts_tableview->setColumnWidth(TableProperties::SelectedParts::ColumnPartName, 500);
     ui->selected_parts_tableview->hideColumn(TableProperties::SelectedParts::ColumnPartID);
 }
 
@@ -252,6 +252,8 @@ void MainWindow::select_part_button_clicked()
         break;
     }
     ui->part_tableview->hideColumn(TableProperties::Parts::ColumnID);
+    ui->part_tableview->setColumnWidth(TableProperties::Parts::ColumnCompany, 200);
+    ui->part_tableview->setColumnWidth(TableProperties::Parts::ColumnName, 400);
     ui->part_tableview->setProperty("part_type", part_type);
     ui->stackedWidget->setCurrentIndex(1);
 }
