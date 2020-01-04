@@ -18,6 +18,7 @@ private:
     QString generate_parts_header();
     QString generate_part_rows();
     QString generate_sign_space();
+    QString generate_header();
 
 public slots:
     void order_bike();

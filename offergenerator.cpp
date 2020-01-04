@@ -20,7 +20,8 @@ void OfferGenerator::set_selected_parts_model(QStandardItemModel *model)
 
 void OfferGenerator::generate_offer()
 {
-    QString html = QString("%1"
+    QString html = QString("%6"
+                           "%1"
                            "<p>&nbsp;</p>"
                            "<hr>"
                            "%2"
@@ -37,7 +38,8 @@ void OfferGenerator::generate_offer()
             .arg(generate_parts_header())
             .arg(total_cost)
             .arg(generate_part_rows())
-            .arg(generate_sign_space());
+            .arg(generate_sign_space())
+            .arg(generate_header());
     QTextDocument document;
     document.setHtml(html);
 
@@ -132,4 +134,11 @@ QString OfferGenerator::generate_sign_space()
                                 "</table>");
 
     return sign_space;
+}
+
+QString OfferGenerator::generate_header()
+{
+    QString header = QString("<h1 align = 'center'>Oferta</h1>");
+
+    return header;
 }

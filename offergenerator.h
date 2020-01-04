@@ -21,6 +21,7 @@ public slots:
     QString generate_part_rows();
     QString generate_offer_frame();
     QString generate_sign_space();
+    QString generate_header();
 
 signals:
 

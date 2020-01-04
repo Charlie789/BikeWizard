@@ -87,6 +87,14 @@ QString OrderBike::generate_sign_space()
     return sign_space;
 }
 
+QString OrderBike::generate_header()
+{
+    QString header = QString("<h1 align = 'center'>Przesunięcie magazynowe"
+                             "<br>MM</h1>");
+
+    return header;
+}
+
 void OrderBike::order_bike()
 {
     //decrease_quantity();
@@ -100,7 +108,9 @@ void OrderBike::set_selected_parts_model(QStandardItemModel* model)
 
 void OrderBike::generate_order()
 {
-    QString html = QString("%1"
+    QString html = QString("%4"
+                           "<br>"
+                           "%1"
                            "<p>&nbsp;</p>"
                            "%2"
                            "<br>"
@@ -109,7 +119,8 @@ void OrderBike::generate_order()
                            "%3")
             .arg(generate_order_frame())
             .arg(generate_part_rows())
-            .arg(generate_sign_space());
+            .arg(generate_sign_space())
+            .arg(generate_header());
     QTextDocument document;
     document.setHtml(html);
 
