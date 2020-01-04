@@ -14,15 +14,21 @@ public:
 private:
     QStandardItemModel* m_selected_parts_model;
 
+    QString generate_order_frame();
+    QString generate_parts_header();
+    QString generate_part_rows();
+    QString generate_sign_space();
+
 public slots:
     void order_bike();
     void set_selected_parts_model(QStandardItemModel* model);
+    void generate_order();
 
 private slots:
     void decrease_quantity();
 
 signals:
-    void send_part_ID(QString part_ID);
+    void send_part_ID(QString part_ID, int quantity);
 
 };
 

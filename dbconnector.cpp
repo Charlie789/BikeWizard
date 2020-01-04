@@ -37,9 +37,9 @@ void DbConnector::create_models()
     }
 }
 
-void DbConnector::decrease_quantity(QString part_ID)
+void DbConnector::decrease_quantity(QString part_ID, int quantity)
 {
-    QSqlQuery query(QString("UPDATE part SET quantity = quantity - 1 WHERE ID_part = %1;").arg(part_ID));
+    QSqlQuery query(QString("UPDATE part SET quantity = quantity - %1 WHERE ID_part = %2;").arg(quantity).arg(part_ID));
     query.exec(part_ID);
 }
 
