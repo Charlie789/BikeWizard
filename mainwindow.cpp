@@ -429,3 +429,8 @@ void MainWindow::on_order_bike_pushbutton_clicked()
 {
     emit order_bike_pushbutton_clicked();
 }
+
+void MainWindow::on_save_bike_pushbutton_clicked()
+{
+    emit save_bike_pushbutton_clicked();
+}

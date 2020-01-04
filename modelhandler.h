@@ -63,6 +63,7 @@ signals:
     void block_part(CustomTypes::PartType part_type);
     void unlock_part(CustomTypes::PartType part_type);
     void property_attribute_list_ready(QList<PartAttribute>);
+    void send_bike_to_save(QStringList part_list, QStringList part_id_list);
 
 public slots:
     void init_db();
@@ -75,6 +76,7 @@ public slots:
     QString create_filter(CustomTypes::PartType part_type);
     void filter_handler(PartAttribute);
     void check_disc_allowed(PartAttribute part_attribute);
+    void save_bike();
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);

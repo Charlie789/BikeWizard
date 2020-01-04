@@ -85,6 +85,7 @@ private slots:
     void on_generate_offer_pushbutton_clicked();
     void on_part_tableview_clicked(const QModelIndex &index);
     void on_order_bike_pushbutton_clicked();
+    void on_save_bike_pushbutton_clicked();
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
@@ -93,5 +94,6 @@ signals:
     void block_part(CustomTypes::PartType part_type);
     void generate_offer_pushbutton_clicked();
     void order_bike_pushbutton_clicked();
+    void save_bike_pushbutton_clicked();
 };
 #endif // MAINWINDOW_H

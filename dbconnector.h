@@ -16,6 +16,7 @@ public:
     void set_map_part(QMap<CustomTypes::PartType, QString> map_part_table);
     void create_models();
     void decrease_quantity(QString part_ID);
+    void insert_bike(QStringList part_list, QStringList part_id_list);
 
 private:
     QSqlDatabase db;

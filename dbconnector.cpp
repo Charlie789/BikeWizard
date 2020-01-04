@@ -42,3 +42,15 @@ void DbConnector::decrease_quantity(QString part_ID)
     QSqlQuery query(QString("UPDATE part SET quantity = quantity - 1 WHERE ID_part = %1;").arg(part_ID));
     query.exec(part_ID);
 }
+
+void DbConnector::insert_bike(QStringList part_list, QStringList part_id_list)
+{
+    for (int i = 0; i < part_id_list.length(); i++){
+        if (part_id_list[i] == "-1")
+            part_id_list[i] = "NULL";
+    }
+    QString query_string = QString("INSERT INTO bike (%1) VALUES (%2)").arg(part_list.join(", ")).arg(part_id_list.join(", "));
+    qDebug() << query_string;
+    QSqlQuery query;
+    query.exec(query_string);
+}

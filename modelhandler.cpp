@@ -1150,3 +1150,28 @@ void ModelHandler::check_disc_allowed(PartAttribute part_attribute)
         break;
     }
 }
+
+void ModelHandler::save_bike()
+{
+    QStringList part_list;
+    for(auto e : m_map_part_table.keys()){
+        QString table_name;
+        if (e == 20){
+            table_name = "front_disc_view";
+        } else if (e == 21){
+            table_name = "rear_disc_view";
+        } else {
+            table_name = m_map_part_table.value(e);
+        }
+        QStringList table_name_split = table_name.split("_");
+        table_name_split.removeLast();
+        table_name_split.append("ID");
+        part_list << table_name_split.join("_");
+    }
+    QStringList part_id_list;
+    for(auto e : m_map_part_table.keys()){
+        QString part_ID = m_model_selected_parts.item(e, TableProperties::SelectedParts::ColumnPartID)->data(Qt::DisplayRole).toString();
+        part_id_list << part_ID;
+    }
+    emit send_bike_to_save(part_list, part_id_list);
+}
