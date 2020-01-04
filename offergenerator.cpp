@@ -68,6 +68,7 @@ QString OfferGenerator::generate_parts_header()
 
 QString OfferGenerator::generate_part_rows()
 {
+    total_cost = 0;
     QString parts = "<table width='100%'>";
     for (int part_number = 0; part_number < m_selected_parts_model->rowCount(); part_number++){
         double price = m_selected_parts_model->data(m_selected_parts_model->index(part_number,TableProperties::SelectedParts::ColumnPartPrice)).toDouble();

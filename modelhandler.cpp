@@ -716,8 +716,10 @@ void ModelHandler::delete_selected_part(CustomTypes::PartType part_type)
         if (m_model_selected_parts.data(index_part_type).toInt() == part_type){
             QModelIndex index_part_name = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartName);
             QModelIndex index_part_id = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartID);
+            QModelIndex index_part_price = m_model_selected_parts.index(i, TableProperties::SelectedParts::ColumnPartPrice);
             m_model_selected_parts.setData(index_part_name, "Nie wybrano części");
             m_model_selected_parts.setData(index_part_id, "-1");
+            m_model_selected_parts.setData(index_part_price, "0");
         }
     }
     emit part_deleted(part_type);
