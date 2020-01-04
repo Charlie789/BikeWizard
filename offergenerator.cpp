@@ -71,7 +71,13 @@ QString OfferGenerator::generate_part_rows()
     total_cost = 0;
     QString parts = "<table width='100%'>";
     for (int part_number = 0; part_number < m_selected_parts_model->rowCount(); part_number++){
+        if (m_selected_parts_model->data(m_selected_parts_model->index(part_number, TableProperties::SelectedParts::ColumnPartID)).toString() == "-1") {
+            continue;
+        }
         double price = m_selected_parts_model->data(m_selected_parts_model->index(part_number,TableProperties::SelectedParts::ColumnPartPrice)).toDouble();
+        int quantity = 1;
+        if (part_number == CustomTypes::PartTire || part_number == CustomTypes::PartInnerTube)
+            quantity = 2;
         parts += QString(
                     "<tr>"
                     "<td width='5%'>%1</td>"
@@ -83,9 +89,9 @@ QString OfferGenerator::generate_part_rows()
                 .arg(part_number + 1)
                 .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, TableProperties::SelectedParts::ColumnPartID)).toString())
                 .arg(m_selected_parts_model->data(m_selected_parts_model->index(part_number, TableProperties::SelectedParts::ColumnPartName)).toString())
-                .arg(1)
-                .arg(QString::number(price) + " zł");
-        total_cost += price;
+                .arg(quantity)
+                .arg(QString::number(price * quantity) + " zł");
+        total_cost += price * quantity;
     }
     parts += "</table>";
     return parts;
