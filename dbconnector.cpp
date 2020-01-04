@@ -1,5 +1,6 @@
 #include "dbconnector.h"
 #include <QDebug>
+#include <QSqlQuery>
 
 DbConnector::DbConnector(QObject *parent) : QObject(parent)
 {
@@ -34,4 +35,10 @@ void DbConnector::create_models()
         model->select();
         emit model_ready(e, model);
     }
+}
+
+void DbConnector::decrease_quantity(QString part_ID)
+{
+    QSqlQuery query(QString("UPDATE part SET quantity = quantity - 1 WHERE ID_part = %1;").arg(part_ID));
+    query.exec(part_ID);
 }

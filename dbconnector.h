@@ -15,6 +15,7 @@ public:
     void connect_to_db();
     void set_map_part(QMap<CustomTypes::PartType, QString> map_part_table);
     void create_models();
+    void decrease_quantity(QString part_ID);
 
 private:
     QSqlDatabase db;

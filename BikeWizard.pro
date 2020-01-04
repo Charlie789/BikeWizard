@@ -13,6 +13,7 @@ SOURCES += \
     mainwindow.cpp \
     modelhandler.cpp \
     offergenerator.cpp \
+    orderbike.cpp \
     propertycontainter.cpp \
     propertymanager.cpp
 
@@ -24,6 +25,7 @@ HEADERS += \
     mainwindow.h \
     modelhandler.h \
     offergenerator.h \
+    orderbike.h \
     propertycontainter.h \
     propertymanager.h
 

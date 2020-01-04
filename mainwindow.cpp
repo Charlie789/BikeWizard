@@ -424,3 +424,8 @@ void MainWindow::on_part_tableview_clicked(const QModelIndex &index)
     else
         ui->accept_pushbutton->setDisabled(false);
 }
+
+void MainWindow::on_order_bike_pushbutton_clicked()
+{
+    emit order_bike_pushbutton_clicked();
+}

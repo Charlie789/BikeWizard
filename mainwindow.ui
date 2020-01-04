@@ -19,6 +19,13 @@
      <widget class="QStackedWidget" name="stackedWidget">
       <widget class="QWidget" name="selected_parts_page">
        <layout class="QGridLayout" name="gridLayout_2">
+        <item row="1" column="0">
+         <widget class="QPushButton" name="generate_offer_pushbutton">
+          <property name="text">
+           <string>Generuj ofertę</string>
+          </property>
+         </widget>
+        </item>
         <item row="0" column="0">
          <widget class="QTableView" name="selected_parts_tableview">
           <property name="editTriggers">
@@ -32,10 +39,10 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
-         <widget class="QPushButton" name="generate_offer_pushbutton">
+        <item row="2" column="0">
+         <widget class="QPushButton" name="order_bike_pushbutton">
           <property name="text">
-           <string>Generuj ofertę</string>
+           <string>Zamów rower</string>
           </property>
          </widget>
         </item>
