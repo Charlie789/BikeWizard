@@ -69,6 +69,7 @@ private:
     void add_delete_button(int row_index);
 
     BackgroundColorDelegate m_bg_delegate;
+
 public slots:
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
     void set_selected_parts_model(QStandardItemModel* model);
@@ -82,6 +83,7 @@ private slots:
     void prepare_delete_button(CustomTypes::PartType part_type, QList<QString> *);
     void on_back_pushbutton_clicked();
     void on_generate_offer_pushbutton_clicked();
+    void on_part_tableview_clicked(const QModelIndex &index);
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);

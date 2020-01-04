@@ -13,7 +13,7 @@ void BackgroundColorDelegate::initStyleOption(QStyleOptionViewItem *option, cons
 
     QStyleOptionViewItem* m_option = option;
     int quantity_column = index.model()->columnCount();
-    if (index.sibling(index.row(), quantity_column - 1).data().toInt() > 0)
+    if (index.sibling(index.row(), quantity_column - 2).data().toInt() > 0)
         return;
     m_option->backgroundBrush = QBrush(QColor(Qt::red));
 }

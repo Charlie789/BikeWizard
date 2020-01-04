@@ -5,7 +5,6 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
-    , inner_tube_row(10)
 {
     ui->setupUi(this);
     connect(this, &MainWindow::part_changed, this, &MainWindow::prepare_delete_button);
@@ -137,6 +136,7 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
         if (i == CustomTypes::PartInnerTube){
             inner_tube_button = add_select_button(i);
             inner_tube_button->setEnabled(false);
+            inner_tube_row = i;
         } else if(i == CustomTypes::PartFrontDisc) {
             front_disc_button = add_select_button(i);
         } else if(i == CustomTypes::PartRearDisc) {
@@ -414,4 +414,13 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
 void MainWindow::on_generate_offer_pushbutton_clicked()
 {
     emit generate_offer_pushbutton_clicked();
+}
+
+void MainWindow::on_part_tableview_clicked(const QModelIndex &index)
+{
+    int quantity_column = index.model()->columnCount();
+    if (index.sibling(index.row(), quantity_column - 2).data().toInt() == 0)
+        ui->accept_pushbutton->setDisabled(true);
+    else
+        ui->accept_pushbutton->setDisabled(false);
 }
