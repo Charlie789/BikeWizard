@@ -54,3 +54,12 @@ void DbConnector::insert_bike(QStringList part_list, QStringList part_id_list)
     QSqlQuery query;
     query.exec(query_string);
 }
+
+void DbConnector::create_bike_model()
+{
+    QSqlTableModel* model = new QSqlTableModel(this, db);
+    model->setTable("bike");
+    model->setEditStrategy(QSqlTableModel::OnManualSubmit);
+    model->select();
+    emit bike_model_ready(model);
+}

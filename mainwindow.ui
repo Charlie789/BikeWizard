@@ -19,20 +19,6 @@
      <widget class="QStackedWidget" name="stackedWidget">
       <widget class="QWidget" name="selected_parts_page">
        <layout class="QGridLayout" name="gridLayout_2">
-        <item row="2" column="0">
-         <widget class="QPushButton" name="generate_offer_pushbutton">
-          <property name="text">
-           <string>Generuj ofertę</string>
-          </property>
-         </widget>
-        </item>
-        <item row="3" column="0">
-         <widget class="QPushButton" name="order_bike_pushbutton">
-          <property name="text">
-           <string>Zamów rower</string>
-          </property>
-         </widget>
-        </item>
         <item row="0" column="0">
          <widget class="QTableView" name="selected_parts_tableview">
           <property name="editTriggers">
@@ -46,10 +32,24 @@
           </property>
          </widget>
         </item>
-        <item row="1" column="0">
+        <item row="3" column="0">
+         <widget class="QPushButton" name="generate_offer_pushbutton">
+          <property name="text">
+           <string>Generuj ofertę</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="0">
          <widget class="QPushButton" name="save_bike_pushbutton">
           <property name="text">
            <string>Zapisz rower</string>
+          </property>
+         </widget>
+        </item>
+        <item row="4" column="0">
+         <widget class="QPushButton" name="order_bike_pushbutton">
+          <property name="text">
+           <string>Zamów rower</string>
           </property>
          </widget>
         </item>
@@ -81,6 +81,45 @@
           </property>
           <property name="selectionBehavior">
            <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="load_bike_page">
+       <layout class="QGridLayout" name="gridLayout_4">
+        <item row="0" column="0">
+         <widget class="QTableView" name="bike_list_tableview">
+          <property name="editTriggers">
+           <set>QAbstractItemView::NoEditTriggers</set>
+          </property>
+          <property name="selectionBehavior">
+           <enum>QAbstractItemView::SelectRows</enum>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="select_bike_pushbutton">
+          <property name="text">
+           <string>Wybierz rower</string>
+          </property>
+         </widget>
+        </item>
+       </layout>
+      </widget>
+      <widget class="QWidget" name="main_menu_page">
+       <layout class="QGridLayout" name="gridLayout_5">
+        <item row="0" column="0">
+         <widget class="QPushButton" name="load_bike_pushbutton">
+          <property name="text">
+           <string>Wczytaj rower</string>
+          </property>
+         </widget>
+        </item>
+        <item row="1" column="0">
+         <widget class="QPushButton" name="create_new_bike_pushbutton">
+          <property name="text">
+           <string>Stwórz nowy rower</string>
           </property>
          </widget>
         </item>

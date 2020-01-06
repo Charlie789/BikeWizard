@@ -11,6 +11,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, &MainWindow::unlock_part, this, &MainWindow::set_button_available);
     connect(this, &MainWindow::block_part, this, &MainWindow::set_button_unavailable);
     ui->part_tableview->setItemDelegate(&m_bg_delegate);
+    ui->stackedWidget->setCurrentIndex(3);
 }
 
 MainWindow::~MainWindow()
@@ -125,6 +126,12 @@ void MainWindow::set_model(CustomTypes::PartType part_type, QSqlTableModel* mode
         m_model_rear_lever = model;
         break;
     }
+}
+
+void MainWindow::set_bike_model(QSqlTableModel *model)
+{
+    m_model_bike = model;
+    ui->bike_list_tableview->setModel(m_model_bike);
 }
 
 void MainWindow::set_selected_parts_model(QStandardItemModel* model)
@@ -433,4 +440,26 @@ void MainWindow::on_order_bike_pushbutton_clicked()
 void MainWindow::on_save_bike_pushbutton_clicked()
 {
     emit save_bike_pushbutton_clicked();
+}
+
+void MainWindow::on_load_bike_pushbutton_clicked()
+{
+    emit load_bike_pushbutton_clicked();
+    ui->stackedWidget->setCurrentIndex(2);
+}
+
+void MainWindow::on_select_bike_pushbutton_clicked()
+{
+    QList<QString> list;
+    QModelIndex index = ui->bike_list_tableview->selectionModel()->currentIndex();
+    for (int column = 0; column < m_model_bike->columnCount(); column++) {
+        list << m_model_bike->index(index.row(), column).data().toString();
+    }
+    emit bike_selected(&list);
+    ui->stackedWidget->setCurrentIndex(0);
+}
+
+void MainWindow::on_create_new_bike_pushbutton_clicked()
+{
+    ui->stackedWidget->setCurrentIndex(0);
 }

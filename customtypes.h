@@ -3,7 +3,7 @@
 
 namespace CustomTypes {
     enum PartType {
-        PartFrame,
+        PartFrame = 1,
         PartFork,
         PartFrontWheel,
         PartRearWheel,
@@ -86,6 +86,38 @@ namespace TableProperties {
             ColumnCompany,
             ColumnName,
             ColumnID
+        };
+    }
+    namespace Bike {
+        enum Columns {
+            ColumnFrame = 1,
+            ColumnFork,
+            ColumnFrontWheel,
+            ColumnRearWheel,
+            ColumnHeadset,
+            ColumnHandlebar,
+            ColumnStem,
+            ColumnSeatpost,
+            ColumnSaddle,
+            ColumnTire,
+            ColumnInnerTube,
+            ColumnBB,
+            ColumnGrip,
+            ColumnCassette,
+            ColumnChain,
+            ColumnRearDerailleur,
+            ColumnFrontDerailleur,
+            ColumnCrank,
+            ColumnFrontShifter,
+            ColumnRearShifter,
+            ColumnFrontDisc,
+            ColumnRearDisc,
+            ColumnFrontDiscBrakeSet,
+            ColumnRearDiscBrakeSet,
+            ColumnFrontVBrake,
+            ColumnRearVBrake,
+            ColumnFrontLever,
+            ColumnRearLever
         };
     }
 }

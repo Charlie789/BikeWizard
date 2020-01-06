@@ -64,19 +64,21 @@ signals:
     void unlock_part(CustomTypes::PartType part_type);
     void property_attribute_list_ready(QList<PartAttribute>);
     void send_bike_to_save(QStringList part_list, QStringList part_id_list);
+    void send_selected_part(CustomTypes::PartType part_type, QList<QString>* list);
 
 public slots:
     void init_db();
     void init_properties(PropertyContainer* prop);
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
-    void set_properties(CustomTypes::PartType part_type, QList<QString> *list);
+    void set_properties(CustomTypes::PartType part_type, QList<QString>* list);
     void clean_properties(CustomTypes::PartType part_type);
-    void set_selected_part(CustomTypes::PartType part_type, QList<QString> *list);
+    void set_selected_part(CustomTypes::PartType part_type, QList<QString>* list);
     void delete_selected_part(CustomTypes::PartType part_type);
     QString create_filter(CustomTypes::PartType part_type);
     void filter_handler(PartAttribute);
     void check_disc_allowed(PartAttribute part_attribute);
     void save_bike();
+    void set_parts(QList<QString>* part_list);
 
 private slots:
     void fill_selected_parts_model(QMap<CustomTypes::PartType, QString> map_part);

@@ -52,6 +52,8 @@ private:
     QSqlTableModel* m_model_front_lever;
     QSqlTableModel* m_model_rear_lever;
 
+    QSqlTableModel* m_model_bike;
+
     QStandardItemModel* m_selected_parts_model;
 
     int inner_tube_row;
@@ -72,6 +74,7 @@ private:
 
 public slots:
     void set_model(CustomTypes::PartType part_type, QSqlTableModel* model);
+    void set_bike_model(QSqlTableModel* model);
     void set_selected_parts_model(QStandardItemModel* model);
     void set_button_available(CustomTypes::PartType part_type);
     void set_button_unavailable(CustomTypes::PartType part_type);
@@ -86,6 +89,10 @@ private slots:
     void on_part_tableview_clicked(const QModelIndex &index);
     void on_order_bike_pushbutton_clicked();
     void on_save_bike_pushbutton_clicked();
+    void on_load_bike_pushbutton_clicked();
+    void on_select_bike_pushbutton_clicked();
+
+    void on_create_new_bike_pushbutton_clicked();
 
 signals:
     void part_changed(CustomTypes::PartType part_type, QList<QString>* list);
@@ -95,5 +102,7 @@ signals:
     void generate_offer_pushbutton_clicked();
     void order_bike_pushbutton_clicked();
     void save_bike_pushbutton_clicked();
+    void load_bike_pushbutton_clicked();
+    void bike_selected(QList<QString>* part_list);
 };
 #endif // MAINWINDOW_H

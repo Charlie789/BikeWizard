@@ -11,9 +11,12 @@ BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
     connect(&w, &MainWindow::generate_offer_pushbutton_clicked, &m_offer_generator, &OfferGenerator::generate_offer);
     connect(&w, &MainWindow::order_bike_pushbutton_clicked, &m_order_bike, &OrderBike::order_bike);
     connect(&w, &MainWindow::save_bike_pushbutton_clicked, &m_model_handler, &ModelHandler::save_bike);
+    connect(&w, &MainWindow::load_bike_pushbutton_clicked, &db, &DbConnector::create_bike_model);
+    connect(&w, &MainWindow::bike_selected, &m_model_handler, &ModelHandler::set_parts);
     connect(&db, &DbConnector::db_ready, &m_model_handler, &ModelHandler::init_db);
     connect(&db, &DbConnector::model_ready, &m_model_handler, &ModelHandler::set_model);
     connect(&db, &DbConnector::model_ready, &w, &MainWindow::set_model);
+    connect(&db, &DbConnector::bike_model_ready, &w, &MainWindow::set_bike_model);
     connect(&m_model_handler, &ModelHandler::map_part_table_ready, &db, &DbConnector::set_map_part);
     connect(&m_model_handler, &ModelHandler::selected_parts_model_ready, &w, &MainWindow::set_selected_parts_model);
     connect(&m_model_handler, &ModelHandler::selected_parts_model_ready, &m_offer_generator, &OfferGenerator::set_selected_parts_model);

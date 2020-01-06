@@ -8,6 +8,8 @@ ModelHandler::ModelHandler(QObject *parent) :
 {
     connect(this, &ModelHandler::map_part_table_ready, this, &ModelHandler::fill_selected_parts_model);
     connect(this, &ModelHandler::part_deleted, this, &ModelHandler::clean_properties);
+    connect(this, &ModelHandler::send_selected_part, this, &ModelHandler::set_properties);
+    connect(this, &ModelHandler::send_selected_part, this, &ModelHandler::set_selected_part);
 }
 
 void ModelHandler::filter_handler(PartAttribute)
@@ -1061,6 +1063,7 @@ void ModelHandler::fill_selected_parts_model(QMap<CustomTypes::PartType, QString
         m_model_selected_parts.setHeaderData(1, Qt::Horizontal, "Nazwa części");
         m_model_selected_parts.setHeaderData(2, Qt::Horizontal, "Cena");
         m_model_selected_parts.setHeaderData(3, Qt::Horizontal, "");
+        m_model_selected_parts.setHeaderData(4, Qt::Horizontal, "ID");
     }
     emit selected_parts_model_ready(&m_model_selected_parts);
 }
@@ -1174,4 +1177,110 @@ void ModelHandler::save_bike()
         part_id_list << part_ID;
     }
     emit send_bike_to_save(part_list, part_id_list);
+}
+
+void ModelHandler::set_parts(QList<QString>* part_list)
+{
+    QSqlTableModel* model = nullptr;
+    QList<QString> list;
+    for (int part_type = 1; part_type < part_list->length(); part_type++){
+        switch (part_type) {
+        case CustomTypes::PartFrame:
+            model = m_model_frame;
+            break;
+        case CustomTypes::PartFork:
+            model = m_model_fork;
+            break;
+        case CustomTypes::PartFrontWheel:
+            model = m_model_front_wheel;
+            break;
+        case CustomTypes::PartRearWheel:
+            model = m_model_rear_wheel;
+            break;
+        case CustomTypes::PartHeadset:
+            model = m_model_headset;
+            break;
+        case CustomTypes::PartHandlebar:
+            model = m_model_handlebar;
+            break;
+        case CustomTypes::PartStem:
+            model = m_model_stem;
+            break;
+        case CustomTypes::PartSeatpost:
+            model = m_model_seatpost;
+            break;
+        case CustomTypes::PartSaddle:
+            model = m_model_saddle;
+            break;
+        case CustomTypes::PartTire:
+            model = m_model_tire;
+            break;
+        case CustomTypes::PartInnerTube:
+            model = m_model_inner_tube;
+            break;
+        case CustomTypes::PartBB:
+            model = m_model_bb;
+            break;
+        case CustomTypes::PartGrip:
+            model = m_model_grip;
+            break;
+        case CustomTypes::PartCassette:
+            model = m_model_cassette;
+            break;
+        case CustomTypes::PartChain:
+            model = m_model_chain;
+            break;
+        case CustomTypes::PartRearDerailleur:
+            model = m_model_rear_derailleur;
+            break;
+        case CustomTypes::PartFrontDerailleur:
+            model = m_model_front_derailleur;
+            break;
+        case CustomTypes::PartCrank:
+            model = m_model_crank;
+            break;
+        case CustomTypes::PartFrontShifter:
+            model = m_model_front_shifter;
+            break;
+        case CustomTypes::PartRearShifter:
+            model = m_model_rear_shifter;
+            break;
+        case CustomTypes::PartFrontDisc:
+            model = m_model_front_disc;
+            break;
+        case CustomTypes::PartRearDisc:
+            model = m_model_rear_disc;
+            break;
+        case CustomTypes::PartFrontDiscBrakeSet:
+            model = m_model_front_disc_brake_set;
+            break;
+        case CustomTypes::PartRearDiscBrakeSet:
+            model = m_model_rear_disc_brake_set;
+            break;
+        case CustomTypes::PartFrontVBrake:
+            model = m_model_front_vbrake;
+            break;
+        case CustomTypes::PartRearVBrake:
+            model = m_model_rear_vbrake;
+            break;
+        case CustomTypes::PartFrontLever:
+            model = m_model_front_lever;
+            break;
+        case CustomTypes::PartRearLever:
+            model = m_model_rear_lever;
+            break;
+        }
+        list.clear();
+        if(part_list->at(part_type) != "0"){
+            for (int row = 0; row < model->rowCount(); row++){
+                if (model->data(model->index(row, 2)) == part_list->at(part_type)){
+                    for (int column = 0; column < model->columnCount(); column++){
+                        list << model->data(model->index(row, column)).toString();
+                    }
+                    break;
+                }
+            }
+            emit send_selected_part((CustomTypes::PartType)part_type, &list);
+        }
+    }
 }

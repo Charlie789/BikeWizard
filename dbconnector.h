@@ -17,6 +17,7 @@ public:
     void create_models();
     void decrease_quantity(QString part_ID, int quantity);
     void insert_bike(QStringList part_list, QStringList part_id_list);
+    void create_bike_model();
 
 private:
     QSqlDatabase db;
@@ -25,6 +26,7 @@ private:
 signals:
     void db_ready(QSqlDatabase* db);
     void model_ready(CustomTypes::PartType part_type, QSqlTableModel* model);
+    void bike_model_ready(QSqlTableModel* model);
 
 };
 
