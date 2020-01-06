@@ -78,6 +78,7 @@ public slots:
     void set_selected_parts_model(QStandardItemModel* model);
     void set_button_available(CustomTypes::PartType part_type);
     void set_button_unavailable(CustomTypes::PartType part_type);
+    void part_loaded_from_db(CustomTypes::PartType part_type, QList<QString> *list);
 
 private slots:
     void select_part_button_clicked();
@@ -91,7 +92,6 @@ private slots:
     void on_save_bike_pushbutton_clicked();
     void on_load_bike_pushbutton_clicked();
     void on_select_bike_pushbutton_clicked();
-
     void on_create_new_bike_pushbutton_clicked();
 
 signals:

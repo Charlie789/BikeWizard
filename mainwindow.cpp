@@ -418,6 +418,11 @@ void MainWindow::set_button_unavailable(CustomTypes::PartType part_type)
     }
 }
 
+void MainWindow::part_loaded_from_db(CustomTypes::PartType part_type, QList<QString> * list)
+{
+    prepare_delete_button(part_type, list);
+}
+
 void MainWindow::on_generate_offer_pushbutton_clicked()
 {
     emit generate_offer_pushbutton_clicked();

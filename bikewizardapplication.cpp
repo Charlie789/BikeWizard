@@ -25,6 +25,7 @@ BikeWizardApplication::BikeWizardApplication(int &argc, char **argv) :
     connect(&m_model_handler, &ModelHandler::unlock_part, &w, &MainWindow::set_button_available);
     connect(&m_model_handler, &ModelHandler::property_attribute_list_ready, &m_property_manager, &PropertyManager::set_properties);
     connect(&m_model_handler, &ModelHandler::send_bike_to_save, &db, &DbConnector::insert_bike);
+    connect(&m_model_handler, &ModelHandler::send_selected_part, &w, &MainWindow::part_loaded_from_db);
     connect(this, &BikeWizardApplication::property_container_ready, &m_model_handler, &ModelHandler::init_properties);
     connect(this, &BikeWizardApplication::property_container_ready, &m_property_manager, &PropertyManager::init_properties);
     connect(&m_property_container, &PropertyContainer::property_changed, &m_model_handler, &ModelHandler::filter_handler);
