@@ -119,9 +119,6 @@ void ModelHandler::init_db()
     m_map_part_column_index.clear();
 
     m_map_part_table.insert(CustomTypes::PartInnerTube, "inner_tube_view");
-    m_map_part_column_index.insert(CustomTypes::AttributeWheelSize, 5);
-    m_map_column_index.insert(CustomTypes::PartInnerTube, m_map_part_column_index);
-    m_map_part_column_index.clear();
 
     m_map_part_table.insert(CustomTypes::PartBB, "bottom_bracket_view");
     m_map_part_column_index.insert(CustomTypes::AttributeBBAxisLength, 3);
@@ -1159,9 +1156,9 @@ void ModelHandler::save_bike()
     QStringList part_list;
     for(auto e : m_map_part_table.keys()){
         QString table_name;
-        if (e == 20){
+        if (e == CustomTypes::PartFrontDisc){
             table_name = "front_disc_view";
-        } else if (e == 21){
+        } else if (e == CustomTypes::PartRearDisc){
             table_name = "rear_disc_view";
         } else {
             table_name = m_map_part_table.value(e);
@@ -1173,7 +1170,7 @@ void ModelHandler::save_bike()
     }
     QStringList part_id_list;
     for(auto e : m_map_part_table.keys()){
-        QString part_ID = m_model_selected_parts.item(e, TableProperties::SelectedParts::ColumnPartID)->data(Qt::DisplayRole).toString();
+        QString part_ID = m_model_selected_parts.item(e - 1, TableProperties::SelectedParts::ColumnPartID)->data(Qt::DisplayRole).toString();
         part_id_list << part_ID;
     }
     emit send_bike_to_save(part_list, part_id_list);

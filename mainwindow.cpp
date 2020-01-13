@@ -140,25 +140,25 @@ void MainWindow::set_selected_parts_model(QStandardItemModel* model)
     ui->selected_parts_tableview->setModel(m_selected_parts_model);
 
     for (int i = 0; i < m_selected_parts_model->rowCount(); ++i){
-        if (i == CustomTypes::PartInnerTube){
+        if (i == CustomTypes::PartInnerTube - 1){
             inner_tube_button = add_select_button(i);
             inner_tube_button->setEnabled(false);
             inner_tube_row = i;
-        } else if(i == CustomTypes::PartFrontDisc) {
+        } else if(i == CustomTypes::PartFrontDisc - 1) {
             front_disc_button = add_select_button(i);
-        } else if(i == CustomTypes::PartRearDisc) {
+        } else if(i == CustomTypes::PartRearDisc - 1) {
             rear_disc_button = add_select_button(i);
-        } else if(i == CustomTypes::PartFrontDiscBrakeSet) {
+        } else if(i == CustomTypes::PartFrontDiscBrakeSet - 1) {
             front_disc_brake_set_button = add_select_button(i);
-        } else if(i == CustomTypes::PartRearDiscBrakeSet) {
+        } else if(i == CustomTypes::PartRearDiscBrakeSet - 1) {
             rear_disc_brake_set_button = add_select_button(i);
-        } else if(i == CustomTypes::PartFrontVBrake) {
+        } else if(i == CustomTypes::PartFrontVBrake - 1) {
             front_vbrake_button = add_select_button(i);
-        } else if(i == CustomTypes::PartRearVBrake) {
+        } else if(i == CustomTypes::PartRearVBrake - 1) {
             rear_vbrake_button = add_select_button(i);
-        } else if(i == CustomTypes::PartFrontLever) {
+        } else if(i == CustomTypes::PartFrontLever - 1) {
             front_lever_button = add_select_button(i);
-        } else if(i == CustomTypes::PartRearLever) {
+        } else if(i == CustomTypes::PartRearLever - 1) {
             rear_lever_button = add_select_button(i);
         } else {
             add_select_button(i);
